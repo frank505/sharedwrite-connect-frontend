@@ -5,11 +5,17 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
-import store from './store'
+import store from './store';
+import { client } from './httpCallSetUp/ApolloClientProvider'
+import {  ApolloProvider } from '@apollo/client'
+
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+ <ApolloProvider client={client}>
+ <App />
+ </ApolloProvider>
+
   </Provider>,
   document.getElementById('root'),
 )
