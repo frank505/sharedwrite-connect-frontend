@@ -37,6 +37,7 @@
     "@testing-library/dom": "^8.11.0",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/js-cookie": "^3.0.0",
     "@types/react-test-renderer": "^17.0.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
@@ -57,7 +58,8 @@
     "redux": "4.1.1",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.4.0",
-    "simplebar-react": "^2.3.6"
+    "simplebar-react": "^2.3.6",
+    "sweetalert2": "^11.1.10"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
