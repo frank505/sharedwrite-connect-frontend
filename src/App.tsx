@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+import Cookies from 'js-cookie';
+import React, { useEffect } from 'react'
 import { HashRouter , Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
+import { JWT_TOKEN_KEY } from './constants';
 import { Gaurd } from './gaurd/Gaurd';
 import './scss/style.scss';
 
@@ -24,7 +26,11 @@ const Page500:React.FunctionComponent<RouteComponentProps>  = React.lazy(() => i
 
 
 
-const App:React.FunctionComponent = () => {
+const App:React.FunctionComponent = () =>
+{
+
+
+
   return (
     <HashRouter>
     <React.Suspense fallback={loading}>
@@ -38,7 +44,7 @@ const App:React.FunctionComponent = () => {
 
         <Route exact={true} path="/404"  render={(props:any) => <Page404 {...props} />} />
         <Route exact={true}   path="/500"  render={(props:any) => <Page500 {...props} />} />
-        <Gaurd  path="/" name="Home" Token='medics-admin' routeRedirect="/login" Component={DefaultLayout} />
+        <Gaurd  path="/" name="Home" Token={JWT_TOKEN_KEY} routeRedirect="/login" Component={DefaultLayout} />
       </Switch>
     </React.Suspense>
   </HashRouter>

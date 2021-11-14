@@ -32,9 +32,6 @@ const Login = () => {
 
 
 
-
-  const [showPassword,setShowPassword] = useState(false);
-
   const [response,setResponse] = useState<any>('');
 
 
@@ -53,8 +50,9 @@ const Login = () => {
     {
       if(data.loginAdmin?.success)
       {
-        // Cookies.set(JWT_TOKEN_KEY,data.loginAdmin?.token);
-        // history.push('/');
+
+        Cookies.set(JWT_TOKEN_KEY,data.loginAdmin?.token);
+        history.push('/dashboard');
       }
 
 
@@ -160,6 +158,8 @@ const goToForgotPasswordPage = ():void =>
                       {formik.errors.password ? <div>{formik.errors.password}</div> : null}
 
                          </div>
+
+
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
