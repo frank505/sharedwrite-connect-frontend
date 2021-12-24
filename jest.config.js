@@ -9,9 +9,20 @@
 
 module.exports = {
   collectCoverageFrom: [
-    'src/**/*.{js,jsx}',
+    'src/**/*.{js,tsx,ts}',
     '!**/*index.js',
     '!src/serviceWorker.js',
     '!src/polyfill.js',
   ],
+  transformIgnorePatterns: [
+    "node_modules/(?!(@coreui|tippy.js|perfect-scrollbar)/)"
+  ]
+  // collectCoverageFrom: [
+  //   "src/**/*.{js,jsx}",
+  //   "!**/node_modules/**",
+  //   "!**/vendor/**",
+  //   '!**/*index.js',
+  //   '!src/serviceWorker.js',
+  //   '!src/polyfill.js',
+  // ]
 }
