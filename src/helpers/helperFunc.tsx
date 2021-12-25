@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import { exit } from "process";
+import React, { SetStateAction, useState } from "react";
 import * as swal from  'sweetalert2';
 
 
 export const  useFormFields = (initialState:any) => {
   const [fields, setValues] = useState<any>(initialState);
 
+
   return [
     fields,
     setValues,
-    function(event:React.ChangeEvent<HTMLInputElement>) {
+  function(event:React.ChangeEvent<HTMLInputElement>) {
       setValues({
         ...fields,
         [event.target.id]: event.target.value
@@ -19,20 +21,23 @@ export const  useFormFields = (initialState:any) => {
 
 
 
+
+
+
 export const validateObject = (dataObject:any)=>
    {
     for(var objects in dataObject)
     {
 
+      // console.log('this is the dataObject oooo ss'+dataObject[objects]+' sss');
       /**
        * if  an empty field exist then disable submit button
        */
      if(dataObject[objects]!="" )
      {
-       
-        return  true;
+        return true;
      }
-    
+
 
     }
    /**
@@ -47,10 +52,10 @@ export const validateObject = (dataObject:any)=>
    export const SwalAlert = (title:string,text:string,icon:any) =>
    {
      return swal.default.fire({
-           title: title,
+      title: title,
      text: text,
      icon: icon,
-     })
-  
-   
+     });
+
+
    }

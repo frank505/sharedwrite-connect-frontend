@@ -8,7 +8,6 @@ export const validate = (values:any):any =>
 
 errors.email =  values.email==''? 'Email Field is Required': '';
  errors.email = !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)?'Invalid email address':'';
- errors.password =  values.password == ''? 'Password Field is Required': '';
 
  const validateObj = validateObject(errors);
 

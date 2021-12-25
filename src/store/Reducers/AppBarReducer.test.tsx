@@ -9,7 +9,7 @@ describe('appbar reducer', () => {
     it('should return the initial state', () => {
      let actions:AnyAction = {
          type: AppBarActionTypes.HIDE_APP_BAR,
-        }  
+        }
       expect(AppBarReducer(initState, actions)).toEqual({appBarVisibilityStatus:"hide"});
 
     });
@@ -36,6 +36,12 @@ describe('appbar reducer', () => {
                 appBarVisibilityStatus:"hide"
             })
     })
-    
+
+    it('returns the default data', ()=>{
+      let actions:AnyAction = {
+        type: null,
+       }
+     expect(AppBarReducer(initState, actions)).toEqual({appBarVisibilityStatus:"hide"});
+    })
 
 });

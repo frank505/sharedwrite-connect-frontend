@@ -124,7 +124,6 @@ const goToForgotPasswordPage = ():void =>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <i className='fa fa-user'></i>
-                        {/* <CIcon icon={cilUser} /> */}
                       </CInputGroupText>
                       <CFormInput
                        placeholder="Enter your email"

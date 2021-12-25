@@ -2,6 +2,7 @@ import { validateObject, useFormFields, SwalAlert } from "./helperFunc";
 import { renderHook, act } from '@testing-library/react-hooks' ;
 import { waitFor } from "@testing-library/dom";
 import * as swal from 'sweetalert2';
+import * as helpers from './helperFunc';
 
 
 
@@ -17,7 +18,7 @@ describe('Name of the group', () => {
 
     it('button is set to disable', ()=>
     {
-        const data =
+        let data =
         {
             name:"",
             email:""
@@ -25,8 +26,16 @@ describe('Name of the group', () => {
 
       let disableRes = validateObject(data);
       console.log(disableRes);
-      // expect(disableRes).toBe(false);
+      expect(disableRes).toBe(false);
 
+      data ={
+        name:'henry',
+        email:'d'
+      }
+
+      let disable = validateObject(data);
+      console.log(disable);
+      expect(disable).toBe(true);
     });
 
   it('test useformfields',()=>
@@ -37,6 +46,7 @@ describe('Name of the group', () => {
 
   it('calls swal alert ', async()=>
   {
+    let swalAlertBe:any = swal.default;
     SwalAlert("dd",'ddd','ddd');
     expect(swal.default.fire).toHaveBeenCalled();
   });

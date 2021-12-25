@@ -13,17 +13,14 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons';
 import { useMutation } from "@apollo/client";
-import { LOGIN_ADMIN_MUTATION } from '../../Graphql/Auth/Mutations';
+import { FORGOT_PASSWORD_CODE_ADMIN } from '../../Graphql/Auth/Mutations';
 import { Formik, FormikErrors, FormikValues, useFormik } from 'formik';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import {Dispatch} from 'redux';
 import { validate } from './ForgotPasswordValidation';
 import { useHistory } from 'react-router-dom';
-import { JWT_TOKEN_KEY } from '../../constants';
 import './forgotpassword.scss';
 
 
@@ -40,7 +37,7 @@ const ForgotPassword = () => {
 
   const history = useHistory();
 
-  const [loginAdmin, { data, loading  }] = useMutation(LOGIN_ADMIN_MUTATION,
+  const [forgotPasswordAdmin, { data, loading  }] = useMutation(FORGOT_PASSWORD_CODE_ADMIN,
     {
     onError: (err) =>
     {
@@ -48,11 +45,9 @@ const ForgotPassword = () => {
     },
     onCompleted: (data) =>
     {
-      if(data.loginAdmin?.success)
+      if(data.forgotPasswordAdmin.success)
       {
-
-        Cookies.set(JWT_TOKEN_KEY,data.loginAdmin?.token);
-        history.push('/dashboard');
+        history.push('/reset-password');
       }
 
 
@@ -65,21 +60,17 @@ const ForgotPassword = () => {
 const formik:FormikValues = useFormik({
   initialValues: {
    email:'',
-   password:''
   },
   validate,
   onSubmit: values =>
   {
-    loginAdmin({
+    forgotPasswordAdmin({
       variables: values
     });
 
   },
 
 });
-
-
-
 
 
 
@@ -90,23 +81,20 @@ const goToLoginPage = ():void =>
 
 
 
-
-
-
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center" id="containerLogin" data-testid="login">
+    <div className="bg-light min-vh-100 d-flex flex-row align-items-center" id="containerForgotPassword" data-testid="forgot-password-root">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={6}>
             <CCardGroup>
               <CCard className="p-12">
                 <CCardBody>
-                  <CForm  onSubmit={formik.handleSubmit} data-testid='form-login-container'>
-                    <h1>Login</h1>
+                  <CForm  onSubmit={formik.handleSubmit} data-testid='form-forgot-password-container'>
+                    <h1>Forgot Password</h1>
                     <p className="text-medium-emphasis">Enter A valid Email Address</p>
 
                     <div className="response responseContentDiv"
-        data-testid="responseLoginDiv">
+        data-testid="responseForgotPasswordDiv">
 
              {
                 loading ?
@@ -123,17 +111,17 @@ const goToLoginPage = ():void =>
 
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
-                        <CIcon icon={cilUser} />
+                      <i className='fa fa-user'></i>
                       </CInputGroupText>
                       <CFormInput
                        placeholder="Enter your email"
                       id="email"
                      name="email"
-                     data-testid="login-email-form"
+                     data-testid="forgot-password-email-form"
                      onChange={formik.handleChange}
                    value={formik.values.email}
                       />
-                        <div className="error_form_response" data-testid="login-password-validation-response">
+                        <div className="error_form_response" data-testid="forgot-password-email-validation-response">
 
                       {formik.errors.email ? <div>{formik.errors.email}</div> : null}
 
@@ -151,12 +139,13 @@ const goToLoginPage = ():void =>
                          type="submit"
                          data-testid="btn-submit-user-form"
                         className="px-4">
-                          Login
+                          Forgot Password
                         </CButton>
 
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0"
+                        data-testid="go-to-login-page"
                         onClick={ goToLoginPage }
                         >
                          Login Here?

@@ -2,13 +2,10 @@ import { Provider } from "react-redux";
 import { store } from "../../store/store";
 import Login from "./Login";
 import { render, fireEvent,
-  waitFor, findByTestId, getByText } from "@testing-library/react";
-import { HashRouter,  Route, Switch, Redirect } from 'react-router-dom';
+  waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from "@apollo/client/testing";
-import { client } from "../../httpCallSetUp/ApolloClientProvider";
 import Cookies from "js-cookie";
-import * as apolloHolder from '@apollo/client';
 import { LOGIN_ADMIN_MUTATION } from "../../Graphql/Auth/Mutations";
 
 

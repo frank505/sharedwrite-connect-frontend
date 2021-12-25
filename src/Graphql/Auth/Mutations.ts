@@ -13,3 +13,18 @@ export const LOGIN_ADMIN_MUTATION = gql`
     }
   }
 `;
+
+
+export const FORGOT_PASSWORD_CODE_ADMIN = gql`
+     mutation forgotPasswordAdmin(
+     $email: String!
+     )
+     {
+         forgotPasswordAdmin(
+          email:$email
+         )
+         {
+          success,email,code,message
+         }
+     }
+`;
