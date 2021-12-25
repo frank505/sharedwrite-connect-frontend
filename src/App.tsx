@@ -20,10 +20,12 @@ const DefaultLayout:React.FunctionComponent<RouteComponentProps> = React.lazy(()
 
 // Pages
 const Login:React.FunctionComponent<RouteComponentProps>  = React.lazy(() => import('./views/login'));
-const ForgotPassword:React.FunctionComponent<RouteComponentProps> = React.lazy(()=>import('./views/forgotpassword'))
+const ForgotPassword:React.FunctionComponent<RouteComponentProps> = React.lazy(()=>import('./views/forgotpassword'));
+const ResetPassword:React.FunctionComponent<RouteComponentProps> = React.lazy(()=>import('./views/resetpassword'));
 const Register:React.FunctionComponent<RouteComponentProps> = React.lazy(() => import('./views/register/Register'));
 const Page404:React.FunctionComponent<RouteComponentProps>  = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500:React.FunctionComponent<RouteComponentProps>  = React.lazy(() => import('./views/pages/page500/Page500'));
+
 
 
 
@@ -40,6 +42,7 @@ const App:React.FunctionComponent = () =>
       <Switch>
         <Route exact={true} path="/login" component={Login} />
         <Route exact={true} path="/forgot-password" component={ForgotPassword} />
+        <Route exact={true} path="/reset-password" component={ResetPassword} />
         <Route exact={true} path="/404"  component={Page404} />
         <Route exact={true}   path="/500"  component={Page500} />
         <Gaurd  path="/" name="Home" Token={JWT_TOKEN_KEY} routeRedirect="/login" Component={DefaultLayout} />

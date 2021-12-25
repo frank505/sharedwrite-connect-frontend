@@ -31,10 +31,6 @@ const ForgotPassword = () => {
 
   const [response,setResponse] = useState<any>('');
 
-
-
-  const dispatch:Dispatch =  useDispatch();
-
   const history = useHistory();
 
   const [forgotPasswordAdmin, { data, loading  }] = useMutation(FORGOT_PASSWORD_CODE_ADMIN,
@@ -47,7 +43,14 @@ const ForgotPassword = () => {
     {
       if(data.forgotPasswordAdmin.success)
       {
-        history.push('/reset-password');
+        history.push(
+          {
+            pathname:'/reset-password',
+            state:{
+              email:data.forgotPasswordAdmin.email
+            }
+          }
+          );
       }
 
 
