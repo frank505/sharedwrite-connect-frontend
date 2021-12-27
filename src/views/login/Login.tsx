@@ -113,7 +113,7 @@ const goToForgotPasswordPage = ():void =>
                 <div className="loading-text">loading.....</div>
                 :
              response !='' && response.hasOwnProperty('message') ?
-            <div className="error_form_response">{response.message}</div>
+            <div className="error_form_response" data-testid="error_form_response">{response.message}</div>
              :
 
              null
