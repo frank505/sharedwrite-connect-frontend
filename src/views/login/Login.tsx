@@ -140,7 +140,6 @@ const goToForgotPasswordPage = ():void =>
                             </div>
                     </CInputGroup>
 
-
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <i className='fa fa-key'></i>

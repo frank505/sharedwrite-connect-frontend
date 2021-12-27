@@ -47,7 +47,7 @@ const ForgotPassword = () => {
           {
             pathname:'/reset-password',
             state:{
-              email:data.forgotPasswordAdmin.email
+              emailToResetPassword:data.forgotPasswordAdmin.email
             }
           }
           );
@@ -81,6 +81,8 @@ const goToLoginPage = ():void =>
 {
   history.push('/login');
 }
+
+
 
 
 

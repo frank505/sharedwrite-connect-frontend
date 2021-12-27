@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from 'react'
-import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -14,31 +13,40 @@ import {
   CRow,
 } from '@coreui/react';
 import {  useMutation } from "@apollo/client";
-import { LOGIN_ADMIN_MUTATION } from '../../Graphql/Auth/Mutations';
+import { ADMIN_CHANGE_PASSWORD } from '../../Graphql/Auth/Mutations';
 import {  FormikValues, useFormik } from 'formik';
-import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
-import {Dispatch} from 'redux';
 import { validate } from './ResetPasswordValidation';
-import { useHistory } from 'react-router-dom';
-import { JWT_TOKEN_KEY } from '../../constants';
-import './login.scss';
+import { useHistory, useLocation } from 'react-router-dom';
+import './resetpassword.scss';
+import { Location } from "history";
+
+
+interface LocationPropsForResetPassword
+{
+ state:{
+   emailToResetPassword:string
+ }
+}
+
+
+
 
 
 
 const ResetPassword = () => {
 
 
+ const {state}:LocationPropsForResetPassword = useLocation<any>();
+
+
 
   const [response,setResponse] = useState<any>('');
 
-
-
   const history = useHistory();
 
+  const [email,setEmail] = useState<string>('');
 
-
-  const [loginAdmin, { data, loading  }] = useMutation(LOGIN_ADMIN_MUTATION,
+  const [adminChangePassword, { data, loading  }] = useMutation(ADMIN_CHANGE_PASSWORD,
     {
     onError: (err) =>
     {
@@ -46,11 +54,9 @@ const ResetPassword = () => {
     },
     onCompleted: (data) =>
     {
-      if(data.loginAdmin.success)
+      if(data.adminChangePassword.success)
       {
-
-        Cookies.set(JWT_TOKEN_KEY,data.loginAdmin.token);
-        history.push('/dashboard');
+       setResponse({message:data.adminChangePassword.message});
       }
 
 
@@ -59,17 +65,26 @@ const ResetPassword = () => {
 
 
 
+  useEffect(()=>{
+   console.log(state.emailToResetPassword);
+  },[])
+
+
+
 
 const formik:FormikValues = useFormik({
   initialValues: {
     code:'',
-   email:'',
-   password:''
+   password:'',
+   confirm:'',
+   email:state.emailToResetPassword
   },
   validate,
   onSubmit: values =>
   {
-    loginAdmin({
+     console.log(values);
+
+    adminChangePassword({
       variables: values
     });
 
@@ -81,27 +96,26 @@ const formik:FormikValues = useFormik({
 
 
 
-const goToLoginPage = ():void =>
-{
-  history.push('/login');
-}
-
 
 
 
 
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center" id="containerResetPassword" data-testid="reset-password-root">
+    <div className="bg-light min-vh-100 d-flex flex-row align-items-center"
+    id="containerResetPassword" data-testid="reset-password-root">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={6}>
             <CCardGroup>
               <CCard className="p-12">
                 <CCardBody>
-                  <CForm  onSubmit={formik.handleSubmit} data-testid='form-login-container'>
+                  <CForm  onSubmit={formik.handleSubmit} data-testid='form-reset-password-container'>
                     <h1>Reset Password</h1>
                     <p className="text-medium-emphasis">Reset Password</p>
+
+                    {/**hidden field */}
+                    <input type="hidden" value={email}  />
 
                     <div className="response responseContentDiv"
         data-testid="responseResetPasswordDiv">
@@ -130,7 +144,7 @@ const goToLoginPage = ():void =>
                      name="code"
                      data-testid="reset-password-code-form"
                      onChange={formik.handleChange}
-                   value={formik.values.email}
+                   value={formik.values.code}
                       />
                         <div className="error_form_response" data-testid="reset-password-code-validation-response">
 
@@ -162,14 +176,14 @@ const goToLoginPage = ():void =>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <i className='fa fa-key'></i>
-                        {/* <CIcon icon={cilLockLocked} /> */}
+
                       </CInputGroupText>
                       <CFormInput
                       type="password"
                         id="confirm"
                         name="confirm"
                         data-testid="reset-password-confirm-code-form"
-                        placeholder='enter your password'
+                        placeholder='confirm your password'
                         onChange={formik.handleChange}
                       value={formik.values.confirm}
                       />
@@ -190,18 +204,11 @@ const goToLoginPage = ():void =>
                          type="submit"
                          data-testid="btn-submit-user-form"
                         className="px-4">
-                          Login
+                          Reset Password
                         </CButton>
 
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0"
-                        data-testid="go-to-forgot-password-page"
-                        onClick={ goToLoginPage }
-                        >
-                          Forgot password?
-                        </CButton>
-                      </CCol>
+
                     </CRow>
                   </CForm>
                 </CCardBody>
