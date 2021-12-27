@@ -69,6 +69,7 @@ const setup = async() =>
     const formForgotPasswordContainer = await findByTestId('form-forgot-password-container');
     const goToLoginPage = await findByTestId('go-to-login-page');
 
+
     return {
       forgotPasswordRoot,
       responseForgotPasswordDiv,
@@ -122,6 +123,7 @@ it('goes to forgotpassword page', async()=>
 
   const {forgotPasswordEmail,formForgotPasswordContainer} = await setup();
   userEvent.type(forgotPasswordEmail,'akpufranklin2@gmail.com');
+
  fireEvent.submit(formForgotPasswordContainer);
  await waitFor(()=>
  {
@@ -136,6 +138,7 @@ it('submits form and login failed', async() =>
 
   const {forgotPasswordEmail,formForgotPasswordContainer,responseForgotPasswordDiv } = await setup();
   userEvent.type(forgotPasswordEmail,'aaaaaaa@gmail.com');
+  expect(responseForgotPasswordDiv.innerHTML).toBe('');
   fireEvent.submit(formForgotPasswordContainer);
   await waitFor(()=>{
     expect(responseForgotPasswordDiv.innerHTML).not.toBe('');

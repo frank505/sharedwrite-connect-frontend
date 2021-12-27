@@ -86,6 +86,7 @@ const setup = async() =>
     const resetPasswordPasswordValidationResponse = await findByTestId('reset-pasword-password-validation-response');
     const resetPasswordConfirmValidationResponse = await findByTestId('reset-password-confirm-validation-response');
    const formResetPasswordContainer = await findByTestId('form-reset-password-container');
+   const goToLoginPage = await findByTestId('go-to-login-page');
 
 
     return {
@@ -97,7 +98,9 @@ const setup = async() =>
      resetPasswordCodeValidationResponse,
      resetPasswordPasswordValidationResponse,
      resetPasswordConfirmValidationResponse,
-     formResetPasswordContainer
+     formResetPasswordContainer,
+     goToLoginPage,
+
     }
 
 
@@ -117,6 +120,15 @@ describe('Reset Password', () => {
     });
 
 
+
+    it('goes to login page', async()=>
+{
+  const {goToLoginPage} = await setup();
+      userEvent.click(goToLoginPage);
+      expect(mockHistoryPush).toHaveBeenCalled();
+});
+
+
     it('validates input on form change', async()=>
     {
 
@@ -127,12 +139,6 @@ describe('Reset Password', () => {
         resetPasswordPasswordValidationResponse,
         resetPasswordConfirmValidationResponse
          } = await setup();
-
-
-
-         expect(resetPasswordCodeValidationResponse.innerHTML).not.toBe('');
-         expect(resetPasswordPasswordValidationResponse.innerHTML).not.toBe('');
-         expect(resetPasswordConfirmValidationResponse.innerHTML).not.toBe('');
 
 
           userEvent.type(resetPasswordCode,'2424');
@@ -147,53 +153,50 @@ describe('Reset Password', () => {
     });
 
 
-//  it('submit form and reset password was successful' ,async()=>{
+ it('submit form and reset password was successful' ,async()=>{
 
-//   const {
-//    formResetPasswordContainer,
-//    resetPasswordCode,
-//    resetPasswordPassword,
-//    resetPasswordConfirm,
-//    responseResetPasswordDiv
-//    } = await setup();
-//   userEvent.type(resetPasswordCode,'2424');
-//   userEvent.type(resetPasswordConfirm,'password');
-//   userEvent.type(resetPasswordPassword,'password');
+  const {
+   formResetPasswordContainer,
+   resetPasswordCode,
+   resetPasswordPassword,
+   resetPasswordConfirm,
+   responseResetPasswordDiv
+   } = await setup();
+  userEvent.type(resetPasswordCode,'2424');
+  userEvent.type(resetPasswordConfirm,'password');
+  userEvent.type(resetPasswordPassword,'password');
+ fireEvent.submit(formResetPasswordContainer);
+ expect(responseResetPasswordDiv.innerHTML).toBe('');
+ await waitFor(()=>
+ {
+    expect(responseResetPasswordDiv).not.toBe('');
+ });
 
-//  fireEvent.submit(formResetPasswordContainer);
-//  await waitFor(()=>
-//  {
-//     expect(responseResetPasswordDiv).not.toBe('');
-//  });
-
-//  });
-
-
-// it('submits form and login failed', async() =>
-// {
-
-//   const {
-//     formResetPasswordContainer,
-//     resetPasswordCode,
-//     resetPasswordPassword,
-//     resetPasswordConfirm,
-//     responseResetPasswordDiv,
-//     resetPasswordCodeValidationResponse,
-//     resetPasswordConfirmValidationResponse,
-//     resetPasswordPasswordValidationResponse
-//   } = await setup();
-//   userEvent.type(resetPasswordCode,'akpufranklin2@gmail.com');
-//   userEvent.type(resetPasswordPassword,'pass');
-//   userEvent.type(resetPasswordConfirm,'pass');
-//   fireEvent.submit(formResetPasswordContainer);
-//   await waitFor(()=>{
-//     expect(resetPasswordCodeValidationResponse.innerHTML).not.toBe('');
-//     expect(resetPasswordPasswordValidationResponse.innerHTML).not.toBe('');
-//     expect(resetPasswordConfirmValidationResponse.innerHTML).not.toBe('');
-//     expect(responseResetPasswordDiv.innerHTML).not.toBe('');
-//    });
+ });
 
 
-// })
+it('submits form and login failed', async() =>
+{
+
+  const {
+    formResetPasswordContainer,
+    resetPasswordCode,
+    resetPasswordPassword,
+    resetPasswordConfirm,
+    responseResetPasswordDiv
+  } = await setup();
+  userEvent.type(resetPasswordCode,'akpufranklin2@gmail.com');
+  userEvent.type(resetPasswordPassword,'pass');
+  userEvent.type(resetPasswordConfirm,'pass');
+  fireEvent.submit(formResetPasswordContainer);
+  expect(responseResetPasswordDiv.innerHTML).toBe('');
+  await waitFor(()=>{
+    expect(responseResetPasswordDiv.innerHTML).not.toBe('');
+   });
+
+
+})
 
   });
+
+

@@ -54,10 +54,9 @@ const ResetPassword = () => {
     },
     onCompleted: (data) =>
     {
-      if(data.adminChangePassword.success)
-      {
+
        setResponse({message:data.adminChangePassword.message});
-      }
+
 
 
     },
@@ -65,9 +64,6 @@ const ResetPassword = () => {
 
 
 
-  useEffect(()=>{
-   console.log(state.emailToResetPassword);
-  },[])
 
 
 
@@ -91,6 +87,15 @@ const formik:FormikValues = useFormik({
   },
 });
 
+
+
+
+
+
+const goToLoginPage = ():void =>
+{
+  history.push('/login');
+}
 
 
 
@@ -196,10 +201,8 @@ const formik:FormikValues = useFormik({
 
                     </CInputGroup>
                     <CRow>
+
                       <CCol xs={6}>
-
-
-
                         <CButton color="primary"
                          type="submit"
                          data-testid="btn-submit-user-form"
@@ -207,6 +210,15 @@ const formik:FormikValues = useFormik({
                           Reset Password
                         </CButton>
 
+                      </CCol>
+
+                      <CCol xs={6} className="text-right">
+                        <CButton color="link" className="px-0"
+                        data-testid="go-to-login-page"
+                        onClick={ goToLoginPage }
+                        >
+                         Login Here?
+                        </CButton>
                       </CCol>
 
                     </CRow>
