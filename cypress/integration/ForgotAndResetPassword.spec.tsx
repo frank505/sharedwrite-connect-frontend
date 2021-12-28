@@ -37,9 +37,12 @@ it('forgot password form submitted successfully is successfully',()=>
   cy.task("dbQuery", {"query":
   "SELECT * FROM password_reset where email='akpufranklin2@gmail.com' ORDER BY ID DESC LIMIT 1"
 }).then(queryResponse => {
-  alert(JSON.stringify(queryResponse));
-  console.log('this na the response oooo')
-   console.log(queryResponse);
+  let code = queryResponse[0].code;
+  cy.get('[data-testid="reset-password-code-form"]').type(code);
+  cy.get('[data-testid="reset-password-password-form"]').type("password");
+  cy.get('[data-testid="reset-password-confirm-code-form"]').type("password");
+  cy.get('[data-testid="form-reset-password-container"]').submit();
+  cy.get('[data-testid="responseResetPasswordDiv"]').should('not.have.html','');
   });
 });
 });
