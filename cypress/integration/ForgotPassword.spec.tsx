@@ -29,16 +29,19 @@ describe("index page activity", ()=>
   })
 
 
-// it('logins successfully',()=>
-// {
-//   cy.get('[data-testid="forgot-password-email-form"]').type('akpufranklin2@gmail.com');
-//   cy.get('[data-testid="login-password-form"]').type('password');
-//   cy.get('[data-testid="form-login-container"]').submit();
-//   cy.get('.sidebar-brand').should('be.visible');
+it('forgot password form submitted successfully is successfully',()=>
+{
+  cy.get('[data-testid="forgot-password-email-form"]').type('akpufranklin2@gmail.com');
+  cy.get('[data-testid="form-forgot-password-container"]').submit();
 
-// })
-
-
+  cy.task("dbQuery", {"query":
+  "SELECT * FROM password_reset where email='akpufranklin2@gmail.com' ORDER BY ID DESC LIMIT 1"
+}).then(queryResponse => {
+  alert(JSON.stringify(queryResponse));
+  console.log('this na the response oooo')
+   console.log(queryResponse);
+  });
+});
 });
 
 

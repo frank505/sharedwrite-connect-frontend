@@ -1,7 +1,21 @@
 
 {
   "env":{
-      "baseUrl":"http://localhost:3000"
-  }
+      "baseUrl":"http://localhost:3000",
+      "db":{
+        "user": "postgres",
+        "host": "localhost",
+        "database": "medics",
+        "password": "password",
+        "port":5432
+        }
+  },
+  "db":{
+    "user": "postgres",
+    "host": "localhost",
+    "database": "medics",
+    "password": "password",
+    "port":5432
+    }
 
 }
