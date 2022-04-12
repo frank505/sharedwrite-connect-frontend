@@ -5,7 +5,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { Provider } from "react-redux";
 import { store } from "../../store/store";
 import ForgotPassword from "./ForgotPassword";
-import { FORGOT_PASSWORD_CODE_ADMIN } from "../../Graphql/Auth/Mutations";
+import { FORGOT_PASSWORD_CODE_ADMIN } from "../../Graphql/Mutations/Auth";
 
 
 const mockHistoryPush = jest.fn();

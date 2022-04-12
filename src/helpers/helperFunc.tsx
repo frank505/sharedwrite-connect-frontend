@@ -1,6 +1,7 @@
 import { exit } from "process";
 import React, { SetStateAction, useState } from "react";
 import * as swal from  'sweetalert2';
+import { ConvertTimeStampToCurrentDateTimeType } from "./types";
 
 
 export const  useFormFields = (initialState:any) => {
@@ -58,4 +59,21 @@ export const validateObject = (dataObject:any)=>
      });
 
 
+   }
+
+
+
+   export const convertTimeStampToCurrentDateTime = (timeStamp:number):ConvertTimeStampToCurrentDateTimeType =>
+   {
+     let date = new Date(timeStamp);
+
+     return {
+       date:date.getDate(),
+       day:date.getDay(),
+       month:date.getMonth(),
+       year:date.getFullYear(),
+       hours:date.getHours(),
+       minute:date.getMinutes(),
+       seconds:date.getSeconds()
+     }
    }

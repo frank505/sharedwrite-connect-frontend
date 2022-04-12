@@ -13,7 +13,7 @@ import {
   CRow,
 } from '@coreui/react';
 import {  useMutation } from "@apollo/client";
-import { ADMIN_CHANGE_PASSWORD } from '../../Graphql/Auth/Mutations';
+import { ADMIN_CHANGE_PASSWORD } from '../../Graphql/Mutations/Auth';
 import {  FormikValues, useFormik } from 'formik';
 import { validate } from './ResetPasswordValidation';
 import { useHistory, useLocation } from 'react-router-dom';

@@ -6,7 +6,7 @@ import { render, fireEvent,
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from "@apollo/client/testing";
 import Cookies from "js-cookie";
-import { ADMIN_CHANGE_PASSWORD } from "../../Graphql/Auth/Mutations";
+import { ADMIN_CHANGE_PASSWORD } from "../../Graphql/Mutations/Auth";
 
 
 

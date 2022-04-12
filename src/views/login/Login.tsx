@@ -14,7 +14,7 @@ import {
   CRow,
 } from '@coreui/react';
 import {  useMutation } from "@apollo/client";
-import { LOGIN_ADMIN_MUTATION } from '../../Graphql/Auth/Mutations';
+import { LOGIN_ADMIN_MUTATION } from '../../Graphql/Mutations/Auth';
 import {  FormikValues, useFormik } from 'formik';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';

@@ -6,7 +6,7 @@ import { render, fireEvent,
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from "@apollo/client/testing";
 import Cookies from "js-cookie";
-import { LOGIN_ADMIN_MUTATION } from "../../Graphql/Auth/Mutations";
+import { LOGIN_ADMIN_MUTATION } from "../../Graphql/Mutations/Auth";
 
 
 
@@ -48,6 +48,7 @@ const mocks = [
     },
   },
 ];
+
 
 
 
