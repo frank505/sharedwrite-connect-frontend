@@ -1,7 +1,4 @@
-import { gql } from "@apollo/client";
-
-export const LOGIN_ADMIN_MUTATION = gql`
-  mutation loginAdmin(
+ mutation loginAdmin(
     $email: String!
     $password: String!
   ) {
@@ -12,11 +9,9 @@ export const LOGIN_ADMIN_MUTATION = gql`
        success,message,errorStatus,error,token
     }
   }
-`;
 
 
-export const FORGOT_PASSWORD_CODE_ADMIN = gql`
-     mutation forgotPasswordAdmin(
+  mutation forgotPasswordAdmin(
      $email: String!
      )
      {
@@ -27,12 +22,9 @@ export const FORGOT_PASSWORD_CODE_ADMIN = gql`
           success,email,code,message
          }
      }
-`;
 
 
-
-export const ADMIN_CHANGE_PASSWORD = gql`
-  mutation adminChangePassword(
+      mutation adminChangePassword(
     $code:String!
     $email:String!
     $password:String!
@@ -48,4 +40,3 @@ export const ADMIN_CHANGE_PASSWORD = gql`
      success,message
     }
   }
-`;

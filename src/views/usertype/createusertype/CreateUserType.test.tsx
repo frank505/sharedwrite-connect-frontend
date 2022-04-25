@@ -34,6 +34,7 @@ const mocks = [
         type: 'desmond',
         type_icon: {name:'desmond.png',size:232332,mime:"image/png"},
       },
+
     },
     result: {
       data: {
@@ -47,7 +48,20 @@ const mocks = [
       },
     },
   },
+  {
+    request: {
+      query: CREATE_USER_TYPE,
+      variables: {
+        type: 'maiden',
+        type_icon: {name:'video.png',size:232332,mime:"image/png"},
+      },
+    },
+    error: new Error('Something went wrong')
+  }
 ];
+
+
+
 
 
 const renderComponent = () =>
@@ -66,15 +80,15 @@ const renderComponent = () =>
 
 
 
-const setup = async() =>
+const setup = () =>
 {
-  const {findByTestId} = renderComponent();
-  const formRoot  = await findByTestId('form-create-user-type');
-  const userTypeTextArea = await findByTestId('user-type-name');
-  const userTypeValidation = await findByTestId('user-type-validation');
-  const iconTypeFile = await findByTestId('type_icon_file');
-  const iconTypeValidation = await findByTestId('type_icon_validation');
-  const btnSubmitUserTypeValidation = await findByTestId('btn-submit-user-type-form');
+  const {findByTestId,getByTestId} = renderComponent();
+  const formRoot  =  getByTestId('form-create-user-type');
+  const userTypeTextArea = getByTestId('user-type-name');
+  const userTypeValidation =  getByTestId('user-type-validation');
+  const iconTypeFile =  getByTestId('type_icon_file');
+  const iconTypeValidation =  getByTestId('type_icon_validation');
+  const btnSubmitUserTypeValidation =  getByTestId('btn-submit-user-type-form');
 
   return {
     formRoot,
@@ -82,7 +96,9 @@ const setup = async() =>
     userTypeValidation,
     iconTypeFile,
     iconTypeValidation,
-    btnSubmitUserTypeValidation
+    btnSubmitUserTypeValidation,
+    findByTestId,
+    getByTestId
   }
 
 }
@@ -92,18 +108,20 @@ const setup = async() =>
 describe('create user type tests', ()=>
 {
   let file:any;
+  let fileErr:any
 
 
   beforeEach(()=>{
    // useDispatchSpy.mockClear();
    file = new File(['(⌐□_□)'], 'desmond.png', { type: 'image/png' });
+   fileErr = new File(['(⌐□_□)'], 'video.png', { type: 'image/png' });
    })
 
 
   afterEach(()=>{
 
    //  useDispatchSpy.mockClear();
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     cleanup();
   })
 
@@ -115,7 +133,7 @@ describe('create user type tests', ()=>
    it('validate form input', async()=>
    {
        const {userTypeTextArea,userTypeValidation,
-        iconTypeFile,iconTypeValidation,btnSubmitUserTypeValidation,formRoot} = await setup();
+        iconTypeFile,iconTypeValidation,btnSubmitUserTypeValidation,formRoot} = setup();
       /**submit form when input is not entered  */
        fireEvent.submit(formRoot);
       await waitFor(()=>{
@@ -140,18 +158,33 @@ describe('create user type tests', ()=>
    it('submits form' , async()=>
    {
     const {userTypeTextArea,userTypeValidation,
-      iconTypeFile,iconTypeValidation,btnSubmitUserTypeValidation,formRoot} = await setup();
+      iconTypeFile,iconTypeValidation,btnSubmitUserTypeValidation,formRoot,findByTestId} =  setup();
       userEvent.type(userTypeTextArea, 'desmond');
       fireEvent.change(iconTypeFile,{
         target:{files: [file]}
       });
       fireEvent.submit(formRoot);
 
-      await waitFor(()=>{
+      await waitFor(async()=>{
         expect(iconTypeValidation.innerHTML).toBe('');
         expect(userTypeValidation.innerHTML).toBe('');
+        expect(await findByTestId('success_form_response')).not.toBe('');
       })
+   });
 
+   it('fails', async()=>
+   {
+    const {userTypeTextArea,userTypeValidation,
+      iconTypeFile,iconTypeValidation,btnSubmitUserTypeValidation,formRoot,findByTestId} =  setup();
+      userEvent.type(userTypeTextArea, 'maiden');
+      fireEvent.change(iconTypeFile,{
+        target:{files: [fileErr]}
+      });
+      await waitFor(()=>  fireEvent.submit(formRoot));
+
+        expect(iconTypeValidation.innerHTML).toBe('');
+        expect(userTypeValidation.innerHTML).toBe('');
+        expect(await findByTestId('error_form_response')).not.toBe('');
 
    });
 

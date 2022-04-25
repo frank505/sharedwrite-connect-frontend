@@ -9,6 +9,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 
 
+// Cookies.remove(JWT_TOKEN_KEY);
 
 export const loading = (
   <div className="pt-3 text-center">

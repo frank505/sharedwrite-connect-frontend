@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from 'react'
-import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -13,16 +12,15 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react';
-import {  useMutation } from "@apollo/client";
-import { LOGIN_ADMIN_MUTATION } from '../../Graphql/Mutations/Auth';
 import {  FormikValues, useFormik } from 'formik';
 import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
-import {Dispatch} from 'redux';
 import { validate } from './LoginValidation';
 import { useHistory } from 'react-router-dom';
 import { JWT_TOKEN_KEY } from '../../constants';
 import './login.scss';
+import { dataSource } from '../../http/ApolloClientProvider';
+import { useLoginAdminMutation } from '../../Graphql/generated/graphql';
+
 
 
 
@@ -30,36 +28,33 @@ const Login = () => {
 
 
 
-  const [response,setResponse] = useState<any>('');
-
-
-
-
-  const dispatch:Dispatch =  useDispatch();
-
   const history = useHistory();
 
 
+  const setHeaderParams = dataSource();
 
-  const [loginAdmin, { data, loading  }] = useMutation(LOGIN_ADMIN_MUTATION,
-    {
-    onError: (err) =>
-    {
-        setResponse({name:err.name,message:err.message});
-    },
-    onCompleted: (data) =>
-    {
-      if(data.loginAdmin.success)
-      {
+  const { mutate,isLoading,isSuccess,isError,data,error } = useLoginAdminMutation(setHeaderParams);
 
-        Cookies.set(JWT_TOKEN_KEY,data.loginAdmin.token);
+
+
+  useEffect(()=>{
+
+
+
+  if(isSuccess)
+  {
+    if(data?.loginAdmin?.success)
+    {
+
+      Cookies.set(JWT_TOKEN_KEY,  data?.loginAdmin?.token as string);
         history.push('/dashboard');
-      }
+    }
+
+  }
 
 
-    },
-  });
 
+  },[isLoading])
 
 
 
@@ -69,12 +64,9 @@ const formik:FormikValues = useFormik({
    password:''
   },
   validate,
-  onSubmit: values =>
+  onSubmit: (values:any) =>
   {
-    loginAdmin({
-      variables: values
-    });
-
+    mutate(values);
   },
 });
 
@@ -109,11 +101,11 @@ const goToForgotPasswordPage = ():void =>
         data-testid="responseLoginDiv">
 
              {
-                loading ?
+                isLoading ?
                 <div className="loading-text">loading.....</div>
                 :
-             response !='' && response.hasOwnProperty('message') ?
-            <div className="error_form_response" data-testid="error_form_response">{response.message}</div>
+            error!==void 0 &&  error?.message ?
+            <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
              :
 
              null

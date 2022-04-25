@@ -1,23 +1,22 @@
-import React,{useEffect, useState} from 'react'
-import { Link } from 'react-router-dom'
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardGroup,
   CCol,
   CContainer,
-  CRow,
-  CTable
-} from '@coreui/react'
-import { useLazyQuery } from '@apollo/client'
-import { GET_USER_TYPE_LIST } from '../../../Graphql/Query/UserType'
-import { IViewUserResponseType, PagerParams, ViewUserTypeListDataType } from './types'
-import Pagination from "react-js-pagination";
+  CRow
+} from '@coreui/react';
 import "bootstrap/scss/bootstrap.scss";
+import React, { useEffect, useState } from 'react';
+import { ThreeDots } from 'react-loader-spinner';
+import { useHistory } from 'react-router-dom';
+import { useGetUserTypeListQuery } from '../../../Graphql/generated/graphql';
+import { dataSource } from '../../../http/ApolloClientProvider';
+import { ViewUserTypeListDataType } from './types';
 import { ViewUserTypeList } from './ViewUserTypeList';
-import { ThreeDots } from 'react-loader-spinner'
-import { ConvertTimeStampToCurrentDateTimeType } from '../../../helpers/types'
+
+
+
 
 
 
@@ -26,76 +25,72 @@ const  ViewUserType:React.FC<{}> = () =>
 {
 
 
+const history = useHistory();
 
 
   const [responseData,setResponseData] = useState<Array<ViewUserTypeListDataType>>([]);
   const [paginationParams,setPaginationParams] = useState<any>(null);
   const [fileUrl,setFileUrl] = useState<string>('');
-  const perPage = '10';
+  const perPage = '2';
+  const [currentPage,setCurrPage] = useState('1');
+
+  const setHeaderParams = dataSource();
 
 
 
-  useEffect(()=>{
-  console.log('we are here oooo');
-    getUserTypeList({variables:
-      {
-      curr_page:'1',
-      per_page:perPage
-    }
-  });
-
-  },[])
+  const {isSuccess,isError,isLoading,data,refetch} = useGetUserTypeListQuery(
+   setHeaderParams, {per_page:perPage,curr_page:currentPage},{cacheTime:0});
 
 
-  const [getUserTypeList, {data,loading}] = useLazyQuery(GET_USER_TYPE_LIST, {
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
 
-   onError: (err) =>
-   {
-     console.log(err);
-   },
-   onCompleted:(data:IViewUserResponseType)=>
-   {
-    console.log(data);
-     setFileUrl(data.getUserTypeList.file_url);
+
+
+useEffect(()=>{
+
+
+
+  if(isSuccess)
+  {
+    setFileUrl(data?.getUserTypeList?.file_url as string);
 
      setPaginationParams({
-      firstPage:data.getUserTypeList.data.first_page,
-      lastPage:data.getUserTypeList.data.last_page,
-      currPage:data.getUserTypeList.data.current_page,
-      nextPage:data.getUserTypeList.data.current_page + 1,
-      total:data.getUserTypeList.data.total
+      firstPage:data?.getUserTypeList?.data?.first_page as number,
+      lastPage:data?.getUserTypeList?.data?.last_page,
+      currPage:data?.getUserTypeList?.data?.current_page,
+      nextPage:data?.getUserTypeList?.data?.current_page as number + 1,
+      total:data?.getUserTypeList?.data?.total
      });
+    setResponseData(data?.getUserTypeList?.data?.data as any);
 
-    setResponseData(data.getUserTypeList.data.data);
+  }
 
 
-   }
-  });
+},[isLoading])
+
+
+
+useEffect(()=>{
+
+refetch();
+
+},[currentPage])
 
 
   const loadPageItem = (pageNumber:number):void =>
   {
-    console.log(pageNumber)
-   getUserTypeList({
-     variables:{
-       curr_page:pageNumber+'',
-       per_page:perPage
-     }
-   })
+   setCurrPage(pageNumber.toString());
   }
 
 
 
  const editContent = (id:string|number) =>
  {
-  console.log(id);
+
  }
 
  const deleteContent = (id:number|string) =>
  {
-   console.log(id);
+
  }
 
 
@@ -111,30 +106,26 @@ const  ViewUserType:React.FC<{}> = () =>
               <CCard className="p-4">
                 <CCardBody>
                   {
-                  loading ?
-                    <ThreeDots
+                  isLoading ?
+
+                  <ThreeDots
+                    data-testid="loading-data-view-user-type"
                     color="#321fdb" height={100} width={100}
                     />
                    :
-                  <ViewUserTypeList
+
+                        <ViewUserTypeList
                   responseData={responseData}
                   fileUrl={fileUrl}
-                  editContent={editContent}
-                  deleteContent={deleteContent}
+                  activePage={paginationParams?.currPage}
+                  itemsCountPerPage={parseInt(perPage)}
+                   totalItemsCount={paginationParams==null?0:paginationParams?.total}
+                  loadPageItem={loadPageItem}
                   />
+
                 }
 
-                <div style={{marginLeft:10}}>
-                <Pagination
-          activePage={paginationParams?.currPage}
-          itemsCountPerPage={parseInt(perPage)}
-          totalItemsCount={paginationParams==null?0:paginationParams?.total}
-          pageRangeDisplayed={5}
-           onChange={loadPageItem}
-           itemClass="page-item"
-           linkClass="page-link"
-            />
-            </div>
+
 
                 </CCardBody>
               </CCard>

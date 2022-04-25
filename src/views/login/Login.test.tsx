@@ -1,13 +1,9 @@
-import { Provider } from "react-redux";
-import { store } from "../../store/store";
 import Login from "./Login";
-import { render, fireEvent,
+import { fireEvent,
   waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
-import { MockedProvider } from "@apollo/client/testing";
 import Cookies from "js-cookie";
-import { LOGIN_ADMIN_MUTATION } from "../../Graphql/Mutations/Auth";
-
+import TestWrapper from '../../../jest/TestWrapper';
 
 
 const mockHistoryPush = jest.fn();
@@ -26,44 +22,10 @@ jest.mock('react-router-dom', () => ({
 
 
 
-const mocks = [
-  {
-    request: {
-      query: LOGIN_ADMIN_MUTATION,
-      variables: {
-        email: 'akpufranklin2@gmail.com',
-        password: 'password',
-      },
-    },
-    result: {
-      data: {
-        loginAdmin: {
-          success:true,
-          token:'dfgfdsaAEWSDSZCVV?.',
-          errorStatus:null,
-          error:null,
-          message:'login successful'
-        },
-      },
-    },
-  },
-];
-
-
-
 
 const renderComponent = () =>
 {
-  const Comp =  render(
-
-    <Provider store={store} >
-    <MockedProvider mocks={mocks} addTypename={false} >
-    <Login/>
-    </MockedProvider>
-    </Provider>
-    );
-
-    return Comp;
+ return TestWrapper(<Login/>);
 }
 
 
@@ -96,6 +58,15 @@ const setup = async() =>
 
 
 describe('Login component', () => {
+
+  let originFetch:any;
+
+  beforeEach(() => {
+    originFetch = (global as any).fetch;
+  });
+  afterEach(() => {
+    (global as any).fetch = originFetch;
+  });
 
 
    afterEach(()=>{;
@@ -135,6 +106,18 @@ it('goes to forgotpassword page', async()=>
 
  it('submit form and login was successful' ,async()=>{
 
+  const dataRes = {
+    data:{
+      loginAdmin:{
+        success:true,
+        token:'sssss'
+      }
+    }
+  }
+  const mRes = { json: jest.fn().mockResolvedValueOnce(dataRes) };
+  const mockedFetch = jest.fn().mockResolvedValueOnce(mRes as any);
+  (global as any).fetch = mockedFetch;
+
   const {loginEmail,loginPassword,formLoginContainer } = await setup();
   userEvent.type(loginEmail,'akpufranklin2@gmail.com');
   userEvent.type(loginPassword,'password');
@@ -147,6 +130,7 @@ it('goes to forgotpassword page', async()=>
  {
   expect(Cookies.set).toHaveBeenCalled();
   expect(mockHistoryPush).toHaveBeenCalled();
+  expect(mockedFetch).toHaveBeenCalled();
  });
 
  });
@@ -154,6 +138,20 @@ it('goes to forgotpassword page', async()=>
 
 it('submits form and login failed', async() =>
 {
+  const dataRes = {
+    data:{
+      loginAdmin:{
+        success:true,
+        token:'sssss'
+      }
+    },
+    errors:[{
+      message:'failed'
+    }]
+  }
+  const mRes = { json: jest.fn().mockResolvedValueOnce(dataRes) };
+  const mockedFetch = jest.fn().mockResolvedValueOnce(mRes as any);
+  (global as any).fetch = mockedFetch;
 
   const {loginEmail,loginPassword,formLoginContainer,responseLoginDiv } = await setup();
   userEvent.type(loginEmail,'akpufranklin2@gmail.com');
@@ -161,6 +159,7 @@ it('submits form and login failed', async() =>
   fireEvent.submit(formLoginContainer);
   await waitFor(()=>{
     expect(responseLoginDiv.innerHTML).not.toBe('');
+    expect(mockedFetch).toHaveBeenCalled();
    });
 
 

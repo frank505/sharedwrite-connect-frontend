@@ -39,7 +39,9 @@ export type IViewUserResponseType =
 
 export type ViewUserTypeListType = {
   fileUrl:string,
-  responseData:Array<ViewUserTypeListDataType>,
-  editContent: (id:string|number) => void
-  deleteContent: (id:string|number) => void
+  responseData?:Array<ViewUserTypeListDataType>,
+  activePage:number,
+  itemsCountPerPage:number
+   totalItemsCount:number
+  loadPageItem:(pageNumber:number) => void
 }

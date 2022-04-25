@@ -1,61 +1,33 @@
-import { render, fireEvent,
+import { fireEvent,
   waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
-import { MockedProvider } from "@apollo/client/testing";
-import { Provider } from "react-redux";
-import { store } from "../../store/store";
 import ForgotPassword from "./ForgotPassword";
-import { FORGOT_PASSWORD_CODE_ADMIN } from "../../Graphql/Mutations/Auth";
+import TestWrapperComponent from "../../../jest/TestWrapper";
+
+
 
 
 const mockHistoryPush = jest.fn();
 
+
+
+
+
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom') as any,
- useHistory: () => ({
-   push: mockHistoryPush,
- }),
+   ...jest.requireActual('react-router-dom') as any,
+  useHistory: () => ({
+    push: mockHistoryPush,
+  }),
 }));
 
-
-
-const mocks = [
-  {
-    request:{
-      query: FORGOT_PASSWORD_CODE_ADMIN,
-      variables: {
-        email: 'akpufranklin2@gmail.com',
-      },
-    },
-    result: {
-      data: {
-        forgotPasswordAdmin: {
-          success:true,
-          email:'akpufranklin2@gmail.com',
-          code:'2323',
-          message:'login successful'
-        },
-      },
-    },
-
-  }
-];
 
 
 
 const renderComponent = () =>
 {
-  const Comp =  render(
-
-    <Provider store={store} >
-    <MockedProvider mocks={mocks} addTypename={false} >
-    <ForgotPassword/>
-    </MockedProvider>
-    </Provider>
-    );
-
-    return Comp;
+ return TestWrapperComponent(<ForgotPassword />);
 }
+
 
 
 
@@ -86,14 +58,20 @@ const setup = async() =>
 describe('Login component', () => {
 
 
+  let originFetch:any;
+
+  beforeEach(() => {
+    originFetch = (global as any).fetch;
+  });
+  afterEach(() => {
+    (global as any).fetch = originFetch;
+  });
+
+
    afterEach(()=>{;
      jest.resetAllMocks();
    })
 
-    it('renders component properly',()=>
-    {
-      renderComponent();
-    });
 
 
     it('validates input on form change', async()=>
@@ -119,7 +97,26 @@ it('goes to forgotpassword page', async()=>
       expect(mockHistoryPush).toHaveBeenCalled();
 });
 
- it('submit form and forgot password was successful' ,async()=>{
+
+ it('submit form and forgot password was successful' ,async()=>
+ {
+  const dataRes = {
+    data:{
+      forgotPasswordAdmin: {
+        success:true,
+        email:'akpufranklin2@gmail.com',
+        code:'2323',
+        message:'login successful'
+      },
+    },
+    errors:[{
+      message:'failed'
+    }]
+  }
+  const mRes = { json: jest.fn().mockResolvedValueOnce(dataRes) };
+  const mockedFetch = jest.fn().mockResolvedValueOnce(mRes as any);
+
+  (global as any).fetch = mockedFetch;
 
   const {forgotPasswordEmail,formForgotPasswordContainer} = await setup();
   userEvent.type(forgotPasswordEmail,'akpufranklin2@gmail.com');
@@ -127,10 +124,14 @@ it('goes to forgotpassword page', async()=>
  fireEvent.submit(formForgotPasswordContainer);
  await waitFor(()=>
  {
+   expect(mockedFetch).toHaveBeenCalled();
   expect(mockHistoryPush).toHaveBeenCalled();
  });
 
  });
+
+
+
 
 
 it('submits form and login failed', async() =>

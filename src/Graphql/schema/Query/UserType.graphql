@@ -1,7 +1,4 @@
-import { gql } from "@apollo/client";
-
-export const GET_USER_TYPE_LIST = gql`
-  query getUserTypeList(
+ query getUserTypeList(
     $per_page: String!
     $curr_page: String!
   ) {
@@ -20,4 +17,3 @@ export const GET_USER_TYPE_LIST = gql`
       ,message,file_url
     }
   }
-`;

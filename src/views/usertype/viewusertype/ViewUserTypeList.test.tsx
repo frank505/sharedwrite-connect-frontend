@@ -2,13 +2,13 @@ import { GET_USER_TYPE_LIST } from "../../../Graphql/Query/UserType";
 import { render, fireEvent,
   waitFor,
   cleanup} from "@testing-library/react";
-import TestRenderer, { act } from 'react-test-renderer'; // ES6
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from "@apollo/client/testing";
 import { Provider } from "react-redux";
 import { store } from "../../../store/store";
 import ViewUserType from "./ViewUserType";
 import { GraphQLError } from "graphql";
+import { ViewUserTypeList } from "./ViewUserTypeList";
 
 
 
@@ -28,6 +28,8 @@ jest.mock('react-router-dom', () => ({
 
 
 
+
+
 const mocks:any = [
   {
     request: {
@@ -37,8 +39,9 @@ const mocks:any = [
         curr_page: '1',
       },
     },
-   loading:false,
+
     result: {
+      errors: [new GraphQLError('Error!')],
       data: {
         getUserTypeList: {
           success:true,
@@ -94,7 +97,14 @@ const renderComponent = () =>
 
     <Provider store={store} >
     <MockedProvider mocks={mocks} addTypename={false} >
-    <ViewUserType/>
+    <ViewUserTypeList
+       fileUrl={mocks[0].result.data.getUserTypeList.file_url}
+       activePage={mocks[0].result.data.getUserTypeList.data.current_page}
+       itemsCountPerPage={mocks[0].result.data.getUserTypeList.data.current_page}
+       totalItemsCount={mocks[0].result.data.getUserTypeList.data.total}
+       loadPageItem={jest.fn()}
+       responseData={mocks[0].result.data.getUserTypeList.data.data}
+       />
     </MockedProvider>
     </Provider>
     );
@@ -106,7 +116,7 @@ const renderComponent = () =>
 
 const setup = () =>
 {
-  const {findByTestId,getByTestId,container,queryByTestId} =  renderComponent();
+  const {findByTestId,getByTestId,container,queryByTestId} = renderComponent();
 
 
   return {
@@ -124,39 +134,15 @@ describe('view user types', ()=>
 {
 
 
-  // afterEach(()=>{
-  //    jest.clearAllMocks();
-  //    cleanup();
-  //  })
+  afterEach(()=>{
+     jest.clearAllMocks();
+     cleanup();
+   })
 
-
-
-
-   it('renders component properly',async()=>
+   it('pagination onchange button is clicked',async()=>
    {
-
-    const component = TestRenderer.create(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <ViewUserType/>
-      </MockedProvider>,
-    );
-
-    //  await new Promise(resolve => setTimeout(resolve, 0));
-     act(()=>  console.log(component.root.findByProps({className:'data-id'})))
-
-
-
-  //   await  waitFor(()=>{
-  //     setup();
-  //   });
-
-  //   const {container} = setup();
-
-
-  //   // await new Promise(resolve => setTimeout(resolve, 0));
-  // // expect(queryByTestId('table-content-viewuser')).not.toBeNull()
-  //   console.log(container.innerHTML);
-
+    const  {queryByTestId} = setup();
+    expect(queryByTestId('table-content-viewuser')).not.toBeNull();
    });
 
 

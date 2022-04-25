@@ -20,13 +20,13 @@
     "start": "react-scripts start",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
-    "test:debug": "react-scripts --inspect-brk test --runInBand"
+    "test:debug": "react-scripts --inspect-brk test --runInBand",
+    "graphql:codegen": "graphql-codegen --config codegen.yml"
   },
   "config": {
     "coreui_library_short_version": "4.0"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.17",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui": "^4.0.5",
     "@coreui/icons": "^2.1.0",
@@ -61,6 +61,7 @@
     "react-dom": "^17.0.2",
     "react-js-pagination": "^3.0.3",
     "react-loader-spinner": "^6.0.0-0",
+    "react-query": "^3.34.20",
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-test-renderer": "^17.0.2",
@@ -71,6 +72,12 @@
     "sweetalert2": "^11.1.10"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.4.8",
+    "@graphql-codegen/typescript-operations": "2.3.5",
+    "@graphql-codegen/typescript-react-apollo": "3.2.11",
+    "@graphql-codegen/typescript-react-query": "^3.5.9",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.34",

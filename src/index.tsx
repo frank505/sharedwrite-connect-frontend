@@ -6,16 +6,18 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import store from './store';
-import { client } from './httpCallSetUp/ApolloClientProvider'
-import {  ApolloProvider } from '@apollo/client'
+// import { client } from './httpCallSetUp/ApolloClientProvider'
+// import {  ApolloProvider } from '@apollo/client';
+import { QueryClient, QueryClientProvider } from "react-query";
 
+
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <Provider store={store}>
- <ApolloProvider client={client}>
- <App />
- </ApolloProvider>
-
+   <QueryClientProvider client={queryClient}>
+   <App />
+   </QueryClientProvider>
   </Provider>,
   document.getElementById('root'),
 )

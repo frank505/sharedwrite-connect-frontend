@@ -2,6 +2,9 @@ import { exit } from "process";
 import React, { SetStateAction, useState } from "react";
 import * as swal from  'sweetalert2';
 import { ConvertTimeStampToCurrentDateTimeType } from "./types";
+import * as H from 'history';
+import Cookies from "js-cookie";
+import { JWT_TOKEN_KEY } from "../constants";
 
 
 export const  useFormFields = (initialState:any) => {
@@ -76,4 +79,12 @@ export const validateObject = (dataObject:any)=>
        minute:date.getMinutes(),
        seconds:date.getSeconds()
      }
+   }
+
+
+
+   export const removeTokenAndRedirectToLogin = (history: H.History<H.LocationState>):void =>
+   {
+    Cookies.remove(JWT_TOKEN_KEY);
+    history.push('/login');
    }

@@ -1,4 +1,9 @@
+import Cookies from 'js-cookie'
 import React from 'react'
+import { JWT_TOKEN_KEY } from './constants'
+
+
+
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 

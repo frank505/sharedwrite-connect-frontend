@@ -51,5 +51,12 @@ describe('Name of the group', () => {
     expect(swal.default.fire).toHaveBeenCalled();
   });
 
+  it('test our helper func', () =>
+  {
+    let date = new Date();
+    let timeConvert = date.getTime();
+   let res = helpers.convertTimeStampToCurrentDateTime(timeConvert);
+   expect(res).toHaveProperty('month',date.getMonth());
+  });
 
 });

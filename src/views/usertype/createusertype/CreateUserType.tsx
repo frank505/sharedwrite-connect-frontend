@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react'
+import React,{useState,useRef, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -16,10 +16,9 @@ import {
 import {  FormikValues, useFormik } from 'formik';
 import { validate } from './CreateUserTypeValidation';
 import './CreateUserType.scss';
-import { useMutation } from '@apollo/client';
-import { CREATE_USER_TYPE } from '../../../Graphql/Mutations/UserType';
-import Cookies from 'js-cookie';
-import { JWT_TOKEN_KEY } from '../../../constants';
+import { useMutation } from 'react-query';
+import {dataSource} from '../../../http/ApolloClientProvider';
+import { useCreateUserTypeMutation } from '../../../Graphql/generated/graphql';
 
 
 
@@ -27,23 +26,10 @@ const  CreateUserType = () => {
 
   let fileInput = useRef<any>();
 
-  const [createUserType, { data, loading  }] = useMutation(CREATE_USER_TYPE,
-    {
-    onError: (err) =>
-    {
-        setResponse({name:err.name,message:err.message});
-    },
-    onCompleted: (data) =>
-    {
+  const setHeaderParams = dataSource();
 
-      if(data.createUserType.success)
-      {
-        setResponse({message:data.createUserType.message});
-      }
+   const {mutate,isError,isSuccess,isLoading,data,error} = useCreateUserTypeMutation(setHeaderParams);
 
-
-    },
-  });
 
 
   const formik:FormikValues = useFormik({
@@ -64,21 +50,17 @@ const  CreateUserType = () => {
     onSubmit: values =>
     {
 
-      const valuesToSubmit = {
+      const valuesToSubmit:any = {
         type:values.type,
         type_icon:fileInput.current.files[0]
       }
 
-
-     createUserType({
-       variables:valuesToSubmit
-     })
-
+   mutate(valuesToSubmit)
 
     },
   });
 
-  const [response,setResponse] = useState<any>('');
+
 
 
   return (
@@ -98,13 +80,13 @@ const  CreateUserType = () => {
         data-testid="responseLoginDiv">
 
              {
-                loading ?
+                isLoading ?
                 <div className="loading-text">loading.....</div>
                 :
-             response !='' && response.hasOwnProperty('message') && response.hasOwnProperty('name')?
-            <div className="error_form_response" data-testid="error_form_response">{response.message}</div>
+             error!==void 0 &&  error?.message ?
+            <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
              :
-             <div className="success_form_response" data-testid="success_form_response">{response.message}</div>
+             <div className="success_form_response" data-testid="success_form_response">{data?.createUserType?.message}</div>
              }
 
            </div>
@@ -137,7 +119,7 @@ const  CreateUserType = () => {
                       </CInputGroupText>
                       <CFormInput
                       type='file'
-                       placeholder="Enter your email"
+                       placeholder="Select a file"
                       id="type_icon"
                      name="type_icon"
                      data-testid="type_icon_file"

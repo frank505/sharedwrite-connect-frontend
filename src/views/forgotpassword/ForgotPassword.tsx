@@ -13,15 +13,13 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react'
-import { useMutation } from "@apollo/client";
-import { FORGOT_PASSWORD_CODE_ADMIN } from '../../Graphql/Mutations/Auth';
-import { Formik, FormikErrors, FormikValues, useFormik } from 'formik';
-import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
-import {Dispatch} from 'redux';
+import { FormikValues, useFormik } from 'formik';
 import { validate } from './ForgotPasswordValidation';
 import { useHistory } from 'react-router-dom';
 import './forgotpassword.scss';
+import {dataSource} from '../../http/ApolloClientProvider';
+import { useForgotPasswordAdminMutation } from '../../Graphql/generated/graphql';
+
 
 
 
@@ -29,33 +27,37 @@ const ForgotPassword = () => {
 
 
 
-  const [response,setResponse] = useState<any>('');
+
 
   const history = useHistory();
 
-  const [forgotPasswordAdmin, { data, loading  }] = useMutation(FORGOT_PASSWORD_CODE_ADMIN,
+
+  const setHeaderParams = dataSource();
+
+const {mutate,isError,isSuccess,isLoading,error,data} = useForgotPasswordAdminMutation(setHeaderParams);
+
+
+
+  useEffect(()=>{
+
+    if(isSuccess)
     {
-    onError: (err) =>
-    {
-        setResponse({name:err.name,message:err.message});
-    },
-    onCompleted: (data) =>
-    {
-      if(data.forgotPasswordAdmin.success)
+      if(data?.forgotPasswordAdmin?.success)
       {
+
         history.push(
-          {
-            pathname:'/reset-password',
-            state:{
-              emailToResetPassword:data.forgotPasswordAdmin.email
-            }
-          }
-          );
+                  {
+                    pathname:'/reset-password',
+                    state:{
+                      emailToResetPassword: data?.forgotPasswordAdmin.email
+                    }
+                  }
+                  );
       }
 
+    }
 
-    },
-  });
+    },[isLoading])
 
 
 
@@ -65,11 +67,9 @@ const formik:FormikValues = useFormik({
    email:'',
   },
   validate,
-  onSubmit: values =>
+  onSubmit: (values:any) =>
   {
-    forgotPasswordAdmin({
-      variables: values
-    });
+    mutate(values);
 
   },
 
@@ -81,6 +81,8 @@ const goToLoginPage = ():void =>
 {
   history.push('/login');
 }
+
+
 
 
 
@@ -102,11 +104,11 @@ const goToLoginPage = ():void =>
         data-testid="responseForgotPasswordDiv">
 
              {
-                loading ?
+                isLoading ?
                 <div className="loading-text">loading.....</div>
                 :
-             response !='' && response.hasOwnProperty('message') ?
-            <div className="error_form_response" data-testid="error_form_response">{response.message}</div>
+                error!==void 0 && error?.message  ?
+            <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
              :
 
              null

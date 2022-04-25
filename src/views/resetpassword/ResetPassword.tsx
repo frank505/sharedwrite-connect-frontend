@@ -12,16 +12,15 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react';
-import {  useMutation } from "@apollo/client";
-import { ADMIN_CHANGE_PASSWORD } from '../../Graphql/Mutations/Auth';
 import {  FormikValues, useFormik } from 'formik';
 import { validate } from './ResetPasswordValidation';
 import { useHistory, useLocation } from 'react-router-dom';
 import './resetpassword.scss';
-import { Location } from "history";
+import  {dataSource} from '../../http/ApolloClientProvider';
+import { useAdminChangePasswordMutation } from '../../Graphql/generated/graphql';
 
 
-interface LocationPropsForResetPassword
+export type LocationPropsForResetPassword =
 {
  state:{
    emailToResetPassword:string
@@ -31,41 +30,19 @@ interface LocationPropsForResetPassword
 
 
 
-
-
 const ResetPassword = () => {
 
 
  const {state}:LocationPropsForResetPassword = useLocation<any>();
 
-
-
-  const [response,setResponse] = useState<any>('');
-
   const history = useHistory();
 
   const [email,setEmail] = useState<string>('');
 
-  const [adminChangePassword, { data, loading  }] = useMutation(ADMIN_CHANGE_PASSWORD,
-    {
-    onError: (err) =>
-    {
-        setResponse({name:err.name,message:err.message});
-    },
-    onCompleted: (data) =>
-    {
-
-       setResponse({message:data.adminChangePassword.message});
+  const setHeaderParams = dataSource();
 
 
-
-    },
-  });
-
-
-
-
-
+ const {mutate,isLoading,isError,isSuccess,data,error} = useAdminChangePasswordMutation(setHeaderParams);
 
 
 const formik:FormikValues = useFormik({
@@ -76,18 +53,12 @@ const formik:FormikValues = useFormik({
    email:state.emailToResetPassword
   },
   validate,
-  onSubmit: values =>
+  onSubmit: (values:any) =>
   {
-     console.log(values);
-
-    adminChangePassword({
-      variables: values
-    });
+    mutate(values);
 
   },
 });
-
-
 
 
 
@@ -126,11 +97,11 @@ const goToLoginPage = ():void =>
         data-testid="responseResetPasswordDiv">
 
              {
-                loading ?
-                <div className="loading-text">loading.....</div>
-                :
-             response !='' && response.hasOwnProperty('message') ?
-            <div className="error_form_response">{response.message}</div>
+               isLoading ?
+               <div className="loading-text">loading.....</div>
+               :
+             error!==void 0 &&  error?.message ?
+            <div className="error_form_response">{error?.message}</div>
              :
 
              null
