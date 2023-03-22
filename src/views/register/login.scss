@@ -1,6 +1,6 @@
-@import '../../../scss/style';
+@import '../../scss/style';
 
-#containerUserType{
+#containerLogin{
 
     justify-content: center;
 
@@ -29,13 +29,6 @@
   }
   .error_form_response{
     color:$error-message-color;
-    font-weight: bolder;
-    width: 100%;
-
-  }
-
-  .success_form_response{
-    color:$success-message-color;
     font-weight: bolder;
     width: 100%;
 

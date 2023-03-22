@@ -17,8 +17,6 @@ import { FormikValues, useFormik } from 'formik';
 import { validate } from './ForgotPasswordValidation';
 import { useHistory } from 'react-router-dom';
 import './forgotpassword.scss';
-import {dataSource} from '../../http/ApolloClientProvider';
-import { useForgotPasswordAdminMutation } from '../../Graphql/generated/graphql';
 
 
 
@@ -32,35 +30,6 @@ const ForgotPassword = () => {
   const history = useHistory();
 
 
-  const setHeaderParams = dataSource();
-
-const {mutate,isError,isSuccess,isLoading,error,data} = useForgotPasswordAdminMutation(setHeaderParams);
-
-
-
-  useEffect(()=>{
-
-    if(isSuccess)
-    {
-      if(data?.forgotPasswordAdmin?.success)
-      {
-
-        history.push(
-                  {
-                    pathname:'/reset-password',
-                    state:{
-                      emailToResetPassword: data?.forgotPasswordAdmin.email
-                    }
-                  }
-                  );
-      }
-
-    }
-
-    },[isLoading])
-
-
-
 
 const formik:FormikValues = useFormik({
   initialValues: {
@@ -69,7 +38,6 @@ const formik:FormikValues = useFormik({
   validate,
   onSubmit: (values:any) =>
   {
-    mutate(values);
 
   },
 
@@ -104,14 +72,14 @@ const goToLoginPage = ():void =>
         data-testid="responseForgotPasswordDiv">
 
              {
-                isLoading ?
-                <div className="loading-text">loading.....</div>
-                :
-                error!==void 0 && error?.message  ?
-            <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
-             :
+            //     isLoading ?
+            //     <div className="loading-text">loading.....</div>
+            //     :
+            //     error!==void 0 && error?.message  ?
+            // <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
+            //  :
 
-             null
+            //  null
              }
 
            </div>

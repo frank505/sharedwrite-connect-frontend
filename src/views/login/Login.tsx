@@ -18,8 +18,7 @@ import { validate } from './LoginValidation';
 import { useHistory } from 'react-router-dom';
 import { JWT_TOKEN_KEY } from '../../constants';
 import './login.scss';
-import { dataSource } from '../../http/ApolloClientProvider';
-import { useLoginAdminMutation } from '../../Graphql/generated/graphql';
+
 
 
 
@@ -27,34 +26,8 @@ import { useLoginAdminMutation } from '../../Graphql/generated/graphql';
 const Login = () => {
 
 
+const history = useHistory();
 
-  const history = useHistory();
-
-
-  const setHeaderParams = dataSource();
-
-  const { mutate,isLoading,isSuccess,isError,data,error } = useLoginAdminMutation(setHeaderParams);
-
-
-
-  useEffect(()=>{
-
-
-
-  if(isSuccess)
-  {
-    if(data?.loginAdmin?.success)
-    {
-
-      Cookies.set(JWT_TOKEN_KEY,  data?.loginAdmin?.token as string);
-        history.push('/dashboard');
-    }
-
-  }
-
-
-
-  },[isLoading])
 
 
 
@@ -66,7 +39,7 @@ const formik:FormikValues = useFormik({
   validate,
   onSubmit: (values:any) =>
   {
-    mutate(values);
+
   },
 });
 
@@ -101,12 +74,12 @@ const goToForgotPasswordPage = ():void =>
         data-testid="responseLoginDiv">
 
              {
-                isLoading ?
-                <div className="loading-text">loading.....</div>
-                :
-            error!==void 0 &&  error?.message ?
-            <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
-             :
+            //     isLoading ?
+            //     <div className="loading-text">loading.....</div>
+            //     :
+            // error!==void 0 &&  error?.message ?
+            // <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
+            //  :
 
              null
              }

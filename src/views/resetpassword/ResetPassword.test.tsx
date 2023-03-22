@@ -6,7 +6,7 @@ import { render, fireEvent,
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from "@apollo/client/testing";
 import Cookies from "js-cookie";
-import { ADMIN_CHANGE_PASSWORD } from "../../Graphql/Mutations/Auth";
+
 
 
 
@@ -35,26 +35,7 @@ jest.mock('react-router-dom', () => ({
 
 
 
-const mocks = [
-  {
-    request: {
-      query: ADMIN_CHANGE_PASSWORD,
-      variables: {
-        code:'2424',
-        password:'password',
-        confirm:'password'
-      },
-    },
-    result: {
-      data: {
-        adminChangePassword: {
-          success:true,
-          message:'login successful'
-        },
-      },
-    },
-  },
-];
+
 
 
 
@@ -63,9 +44,7 @@ const renderComponent = () =>
   const Comp =  render(
 
     <Provider store={store} >
-    <MockedProvider mocks={mocks} addTypename={false} >
     <ResetPassword/>
-    </MockedProvider>
     </Provider>
     );
 

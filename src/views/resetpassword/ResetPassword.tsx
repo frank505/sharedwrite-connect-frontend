@@ -16,8 +16,8 @@ import {  FormikValues, useFormik } from 'formik';
 import { validate } from './ResetPasswordValidation';
 import { useHistory, useLocation } from 'react-router-dom';
 import './resetpassword.scss';
-import  {dataSource} from '../../http/ApolloClientProvider';
-import { useAdminChangePasswordMutation } from '../../Graphql/generated/graphql';
+// import  {dataSource} from '../../http/ApolloClientProvider';
+// import { useAdminChangePasswordMutation } from '../../Graphql/generated/graphql';
 
 
 export type LocationPropsForResetPassword =
@@ -39,10 +39,10 @@ const ResetPassword = () => {
 
   const [email,setEmail] = useState<string>('');
 
-  const setHeaderParams = dataSource();
+//   const setHeaderParams = dataSource();
 
 
- const {mutate,isLoading,isError,isSuccess,data,error} = useAdminChangePasswordMutation(setHeaderParams);
+//  const {mutate,isLoading,isError,isSuccess,data,error} = useAdminChangePasswordMutation(setHeaderParams);
 
 
 const formik:FormikValues = useFormik({
@@ -55,7 +55,7 @@ const formik:FormikValues = useFormik({
   validate,
   onSubmit: (values:any) =>
   {
-    mutate(values);
+    // mutate(values);
 
   },
 });
@@ -97,14 +97,14 @@ const goToLoginPage = ():void =>
         data-testid="responseResetPasswordDiv">
 
              {
-               isLoading ?
-               <div className="loading-text">loading.....</div>
-               :
-             error!==void 0 &&  error?.message ?
-            <div className="error_form_response">{error?.message}</div>
-             :
+            //    isLoading ?
+            //    <div className="loading-text">loading.....</div>
+            //    :
+            //  error!==void 0 &&  error?.message ?
+            // <div className="error_form_response">{error?.message}</div>
+            //  :
 
-             null
+            //  null
              }
 
            </div>

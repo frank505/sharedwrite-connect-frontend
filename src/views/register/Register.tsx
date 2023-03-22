@@ -25,16 +25,26 @@ const Register = () => {
                 <CForm>
                   <h1>Register</h1>
                   <p className="text-medium-emphasis">Create your account</p>
+
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
+                    <CFormInput placeholder="Firstname" autoComplete="firstname" />
                   </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <CFormInput placeholder="Lastname" autoComplete="lastname" />
+                  </CInputGroup>
+
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
                     <CFormInput placeholder="Email" autoComplete="email" />
                   </CInputGroup>
+
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
@@ -45,6 +55,7 @@ const Register = () => {
                       autoComplete="new-password"
                     />
                   </CInputGroup>
+
                   <CInputGroup className="mb-4">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
@@ -55,6 +66,7 @@ const Register = () => {
                       autoComplete="new-password"
                     />
                   </CInputGroup>
+
                   <div className="d-grid">
                     <CButton color="success">Create Account</CButton>
                   </div>
