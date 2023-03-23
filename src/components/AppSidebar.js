@@ -41,7 +41,7 @@ const AppSidebar = () => {
       <CSidebarToggler
         className="d-none d-lg-flex"
         onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-       data-testid="foldsidebartoggle"
+        data-testid="foldsidebartoggle"
       />
     </CSidebar>
   )

@@ -1,16 +1,14 @@
-import { validateObject } from "../../helpers/helperFunc";
+import { validateObject } from '../../helpers/helperFunc'
 
+export const validate = (values: any): any => {
+  const errors: any = {}
 
+  errors.email = values.email == '' ? 'Email Field is Required' : ''
+  errors.email = !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+    ? 'Invalid email address'
+    : ''
 
-export const validate = (values:any):any =>
-{
- const errors:any = {};
+  const validateObj = validateObject(errors)
 
-errors.email =  values.email==''? 'Email Field is Required': '';
- errors.email = !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)?'Invalid email address':'';
-
- const validateObj = validateObject(errors);
-
- return validateObj == false? true: errors;
-
+  return validateObj == false ? true : errors
 }

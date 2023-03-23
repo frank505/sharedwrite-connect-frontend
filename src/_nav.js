@@ -11,7 +11,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
-  cilUser
+  cilUser,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -42,7 +42,6 @@ const _nav = [
         name: 'View User Type',
         to: '/user-type/view-user-type',
       },
-
     ],
   },
 

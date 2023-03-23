@@ -13,19 +13,31 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useHistory } from 'react-router-dom'
+import './register.scss'
 
 const Register = () => {
+  const history = useHistory()
+
+  const goToLoginPage = (): void => {
+    history.push('/login')
+  }
+
+  const goToForgotPasswordPage = (): void => {
+    history.push('/forgot-password')
+  }
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div
+      className="bg-light min-vh-100 d-flex flex-row align-items-center containerRegister"
+      id="containerRegister"
+    >
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
-
+                  <h1 className="auth-header">Signup</h1>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
@@ -68,8 +80,32 @@ const Register = () => {
                   </CInputGroup>
 
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton color="primary">Create Account</CButton>
                   </div>
+
+                  <CRow>
+                    <CCol xs={6} className="text-left">
+                      <CButton
+                        color="link"
+                        className="px-0"
+                        data-testid="go-to-forgot-password-page"
+                        onClick={goToForgotPasswordPage}
+                      >
+                        Forgot password?
+                      </CButton>
+                    </CCol>
+
+                    <CCol xs={6} className="align-right">
+                      <CButton
+                        color="link"
+                        className="px-0"
+                        data-testid="go-to-forgot-password-page"
+                        onClick={goToLoginPage}
+                      >
+                        Login Here
+                      </CButton>
+                    </CCol>
+                  </CRow>
                 </CForm>
               </CCardBody>
             </CCard>

@@ -1,46 +1,93 @@
 @import '../../scss/style';
 
-#containerLogin{
+#containerLogin {
+  background: url('../../assets/images/background_auth.jpg');
+  position: relative;
+  justify-content: center;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-table;
+  height: 100%;
+  width: 100%;
 
+  .add-padding-to-form-card {
+    padding: 2.5rem 1rem !important;
+  }
+  .links-section-on-auth {
     justify-content: center;
-
-  .auth-form-input{
-      width:80%;
+    text-align: center;
+    margin-top: 10px;
   }
-  .btn-submit-register{
-    width:80%;
-    margin-bottom:20px;
-    margin-top:20px;
+  .login-social-icon-span{
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 20px;
   }
-  .form-container{
-     margin-left:15%;
+  .login-with-socials{
+    justify-content: center;
+    text-align: center;
   }
-  .card-item{
-      margin-top:100px;
+  .btn-link {
+    text-decoration: none !important;
   }
-  .loginCredentialsInfo{
-      font-weight: bolder;
-      color:$error-message-color;
+  .logo-image {
+    line-height: 2rem;
+    vertical-align: middle;
+    width: auto;
   }
-  .sign-color-change{
+  .style-card-group {
+    padding: 15px;
+  }
+  .added-btn-style {
+    color: $white;
+  }
+  .auth-form-input {
+    width: 80%;
+  }
+  .btn-submit-register {
+    width: 80%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  .form-container {
+    margin-left: 15%;
+  }
+  .card-item {
+    margin-top: 100px;
+  }
+  .loginCredentialsInfo {
+    font-weight: bolder;
+    color: $error-message-color;
+  }
+  .sign-color-change {
     color: $error-message-color;
     font-weight: bolder;
-    cursor:pointer;
+    cursor: pointer;
   }
-  .error_form_response{
-    color:$error-message-color;
-    font-weight: bolder;
-    width: 100%;
-
-  }
-  .responseContentDiv{
-    width:80%;
-
-  }
-  .loading-text{
+  .error_form_response {
+    color: $error-message-color;
     font-weight: bolder;
     width: 100%;
   }
-
+  .responseContentDiv {
+    width: 80%;
+  }
+  .loading-text {
+    font-weight: bolder;
+    width: 100%;
+  }
+  .align-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .auth-header {
+    display: flex;
+    justify-content: center;
+    font-size: 24px;
+  }
 }
-

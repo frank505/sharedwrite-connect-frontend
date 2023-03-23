@@ -1,46 +1,51 @@
 @import '../../scss/style';
 
-#containerLogin{
+#containerRegister {
+  justify-content: center;
 
-    justify-content: center;
-
-  .auth-form-input{
-      width:80%;
+  .auth-form-input {
+    width: 80%;
   }
-  .btn-submit-register{
-    width:80%;
-    margin-bottom:20px;
-    margin-top:20px;
+  .btn-submit-register {
+    width: 80%;
+    margin-bottom: 20px;
+    margin-top: 20px;
   }
-  .form-container{
-     margin-left:15%;
+  .form-container {
+    margin-left: 15%;
   }
-  .card-item{
-      margin-top:100px;
+  .card-item {
+    margin-top: 100px;
   }
-  .loginCredentialsInfo{
-      font-weight: bolder;
-      color:$error-message-color;
+  .loginCredentialsInfo {
+    font-weight: bolder;
+    color: $error-message-color;
   }
-  .sign-color-change{
+  .sign-color-change {
     color: $error-message-color;
     font-weight: bolder;
-    cursor:pointer;
+    cursor: pointer;
   }
-  .error_form_response{
-    color:$error-message-color;
-    font-weight: bolder;
-    width: 100%;
-
-  }
-  .responseContentDiv{
-    width:80%;
-
-  }
-  .loading-text{
+  .error_form_response {
+    color: $error-message-color;
     font-weight: bolder;
     width: 100%;
   }
-
+  .responseContentDiv {
+    width: 80%;
+  }
+  .loading-text {
+    font-weight: bolder;
+    width: 100%;
+  }
+  .align-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .auth-header {
+    display: flex;
+    justify-content: center;
+  }
 }
-

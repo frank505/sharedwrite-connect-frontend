@@ -5,19 +5,18 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
-import store from './store';
+import store from './store'
 // import { client } from './httpCallSetUp/ApolloClientProvider'
 // import {  ApolloProvider } from '@apollo/client';
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 ReactDOM.render(
   <Provider store={store}>
-   <QueryClientProvider client={queryClient}>
-   <App />
-   </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>,
   document.getElementById('root'),
 )

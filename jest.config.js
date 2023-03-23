@@ -14,9 +14,7 @@ module.exports = {
     '!src/serviceWorker.js',
     '!src/polyfill.js',
   ],
-  transformIgnorePatterns: [
-    "node_modules/(?!(@coreui|tippy.js|perfect-scrollbar)/)"
-  ]
+  transformIgnorePatterns: ['node_modules/(?!(@coreui|tippy.js|perfect-scrollbar)/)'],
   // collectCoverageFrom: [
   //   "src/**/*.{js,jsx}",
   //   "!**/node_modules/**",
