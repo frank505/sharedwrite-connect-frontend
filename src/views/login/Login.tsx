@@ -100,7 +100,6 @@ const Login = () => {
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <i className="fa fa-key"></i>
-                        {/* <CIcon icon={cilLockLocked} /> */}
                       </CInputGroupText>
                       <CFormInput
                         type="password"
@@ -179,3 +178,5 @@ const Login = () => {
 }
 
 export default Login
+
+

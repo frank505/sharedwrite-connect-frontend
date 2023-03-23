@@ -1,114 +1,217 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
   CCardBody,
+  CCardGroup,
   CCol,
   CContainer,
   CForm,
   CFormInput,
+  CImage,
   CInputGroup,
   CInputGroupText,
   CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { FormikValues, useFormik } from 'formik'
+import Cookies from 'js-cookie'
+import { validate } from './RegisterValidation'
 import { useHistory } from 'react-router-dom'
+import { JWT_TOKEN_KEY } from '../../constants'
 import './register.scss'
+import logo from '../../assets/images/logo.png'
 
 const Register = () => {
   const history = useHistory()
+
+  const formik: FormikValues = useFormik({
+    initialValues: {
+      first_name:'',
+      last_name:'',
+      email: '',
+      password: '',
+    },
+    validate,
+    onSubmit: (values: any) => {},
+  })
+
+  const goToForgotPasswordPage = (): void => {
+    history.push('/forgot-password')
+  }
 
   const goToLoginPage = (): void => {
     history.push('/login')
   }
 
-  const goToForgotPasswordPage = (): void => {
-    history.push('/forgot-password')
-  }
   return (
     <div
-      className="bg-light min-vh-100 d-flex flex-row align-items-center containerRegister"
+      className="set-background-img min-vh-100 d-flex flex-row align-items-center"
       id="containerRegister"
+      data-testid="register-root"
     >
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={9} lg={7} xl={6}>
-            <CCard className="mx-4">
-              <CCardBody className="p-4">
-                <CForm>
-                  <h1 className="auth-header">Signup</h1>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
-                    </CInputGroupText>
-                    <CFormInput placeholder="Firstname" autoComplete="firstname" />
-                  </CInputGroup>
+          <div style={{ textAlign: 'center' }}>
+            <CImage src={logo} className="logo-image" />
+          </div>
 
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
-                    </CInputGroupText>
-                    <CFormInput placeholder="Lastname" autoComplete="lastname" />
-                  </CInputGroup>
+          <CCol md={8} xl={5} xxl={5} sm={9} xs={9} lg={4}>
+            <CCardGroup className="style-card-group">
+              <CCard className="p-12 restyle-form-card">
+                <CCardBody>
+                  <CForm
+                    className="add-padding-to-form-card"
+                    onSubmit={formik.handleSubmit}
+                    data-testid="form-login-container"
+                  >
+                    <h3 className="auth-header">Register</h3>
 
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
-                  </CInputGroup>
+                    <div className="response responseContentDiv" data-testid="responseLoginDiv">
+                      {
+                        //     isLoading ?
+                        //     <div className="loading-text">loading.....</div>
+                        //     :
+                        // error!==void 0 &&  error?.message ?
+                        // <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
+                        //  :
 
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Password"
-                      autoComplete="new-password"
-                    />
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-4">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Repeat password"
-                      autoComplete="new-password"
-                    />
-                  </CInputGroup>
-
-                  <div className="d-grid">
-                    <CButton color="primary">Create Account</CButton>
-                  </div>
-
-                  <CRow>
-                    <CCol xs={6} className="text-left">
-                      <CButton
-                        color="link"
-                        className="px-0"
-                        data-testid="go-to-forgot-password-page"
-                        onClick={goToForgotPasswordPage}
+                        null
+                      }
+                    </div>
+                    <CInputGroup className="mb-3">
+                      <CInputGroupText>
+                        <i className="fa fa-user"></i>
+                      </CInputGroupText>
+                      <CFormInput
+                        placeholder="First name"
+                        id="first_name"
+                        name="first_name"
+                        data-testid="login-first-name-form"
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                      />
+                      <div
+                        className="error_form_response"
+                        data-testid="login-first-name-validation-response"
                       >
-                        Forgot password?
-                      </CButton>
-                    </CCol>
+                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                      </div>
+                    </CInputGroup>
 
-                    <CCol xs={6} className="align-right">
-                      <CButton
-                        color="link"
-                        className="px-0"
-                        data-testid="go-to-forgot-password-page"
-                        onClick={goToLoginPage}
+                    <CInputGroup className="mb-3">
+                      <CInputGroupText>
+                        <i className="fa fa-user"></i>
+                      </CInputGroupText>
+                      <CFormInput
+                        placeholder="Last name"
+                        id="email"
+                        name="email"
+                        data-testid="login-email-form"
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                      />
+                      <div
+                        className="error_form_response"
+                        data-testid="login-email-validation-response"
                       >
-                        Login Here
+                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                      </div>
+                    </CInputGroup>
+
+
+                    <CInputGroup className="mb-3">
+                      <CInputGroupText>
+                        <i className="fa fa-envelope"></i>
+                      </CInputGroupText>
+                      <CFormInput
+                        placeholder="Email"
+                        id="email"
+                        name="email"
+                        data-testid="login-email-form"
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                      />
+                      <div
+                        className="error_form_response"
+                        data-testid="login-email-validation-response"
+                      >
+                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                      </div>
+                    </CInputGroup>
+
+                    <CInputGroup className="mb-4">
+                      <CInputGroupText>
+                        <i className="fa fa-key"></i>
+                      </CInputGroupText>
+                      <CFormInput
+                        type="password"
+                        id="password"
+                        name="password"
+                        data-testid="login-password-form"
+                        placeholder="enter your password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password}
+                      />
+                      <div
+                        className="error_form_response"
+                        data-testid="login-password-validation-response"
+                      >
+                        {formik.errors.password ? <div>{formik.errors.password}</div> : null}
+                      </div>
+                    </CInputGroup>
+
+                    <div className="d-grid">
+                      <CButton color="primary" className="added-btn-style">
+                        Login
                       </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
-              </CCardBody>
-            </CCard>
+                    </div>
+
+                    <CRow>
+                      <CCol xs={12} className="links-section-on-auth">
+                        <CButton
+                          color="link"
+                          className="px-0"
+                          data-testid="go-to-forgot-password-page"
+                          onClick={goToLoginPage}
+                        >
+                          Login
+                        </CButton>
+                        <span> | </span>
+                        <CButton
+                          color="link"
+                          className="px-0"
+                          data-testid="go-to-forgot-password-page"
+                          onClick={goToForgotPasswordPage}
+                        >
+                          Forgot password?
+                        </CButton>
+                      </CCol>
+
+                      <CCol xs={12} className="login-with-socials">
+                        <label className="login-social-icon">
+                          <span className='login-social-icon-span'>Login with Social</span>
+                        </label>
+                        <div className="d-flex justify-content-center">
+
+                          <a href="#">
+                            <div className="social-login me-4 text-center">
+                              <i className="fa fa-google"></i>
+                            </div>
+                          </a>
+
+                          <a href="#">
+                            <div className="social-login text-center">
+                              <i className="fa fa-apple"></i>
+                            </div>
+                          </a>
+
+                        </div>
+                      </CCol>
+                    </CRow>
+                  </CForm>
+                </CCardBody>
+              </CCard>
+            </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
@@ -117,3 +220,5 @@ const Register = () => {
 }
 
 export default Register
+
+
