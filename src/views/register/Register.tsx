@@ -30,9 +30,13 @@ const Register = () => {
       last_name:'',
       email: '',
       password: '',
+      confirm_password: '',
     },
     validate,
-    onSubmit: (values: any) => {},
+    onSubmit: (values: any) => {
+
+      console.log(values)
+    },
   })
 
   const goToForgotPasswordPage = (): void => {
@@ -55,7 +59,7 @@ const Register = () => {
             <CImage src={logo} className="logo-image" />
           </div>
 
-          <CCol md={8} xl={5} xxl={5} sm={9} xs={9} lg={4}>
+          <CCol md={8} xl={5} xxl={5} sm={9} xs={9} lg={7}>
             <CCardGroup className="style-card-group">
               <CCard className="p-12 restyle-form-card">
                 <CCardBody>
@@ -64,7 +68,7 @@ const Register = () => {
                     onSubmit={formik.handleSubmit}
                     data-testid="form-login-container"
                   >
-                    <h3 className="auth-header">Register</h3>
+                    <h3 className="auth-header">SignUp</h3>
 
                     <div className="response responseContentDiv" data-testid="responseLoginDiv">
                       {
@@ -86,15 +90,15 @@ const Register = () => {
                         placeholder="First name"
                         id="first_name"
                         name="first_name"
-                        data-testid="login-first-name-form"
+                        data-testid="register-first-name-form"
                         onChange={formik.handleChange}
-                        value={formik.values.email}
+                        value={formik.values.first_name}
                       />
                       <div
                         className="error_form_response"
-                        data-testid="login-first-name-validation-response"
+                        data-testid="register-first-name-validation-response"
                       >
-                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                        {formik.errors.first_name ? <div>{formik.errors.first_name}</div> : null}
                       </div>
                     </CInputGroup>
 
@@ -104,17 +108,17 @@ const Register = () => {
                       </CInputGroupText>
                       <CFormInput
                         placeholder="Last name"
-                        id="email"
-                        name="email"
-                        data-testid="login-email-form"
+                        id="last_name"
+                        name="last_name"
+                        data-testid="register-last-name-form"
                         onChange={formik.handleChange}
-                        value={formik.values.email}
+                        value={formik.values.last_name}
                       />
                       <div
                         className="error_form_response"
-                        data-testid="login-email-validation-response"
+                        data-testid="register-last-name-validation-response"
                       >
-                        {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                        {formik.errors.last_name ? <div>{formik.errors.last_name}</div> : null}
                       </div>
                     </CInputGroup>
 
@@ -147,8 +151,8 @@ const Register = () => {
                         type="password"
                         id="password"
                         name="password"
-                        data-testid="login-password-form"
-                        placeholder="enter your password"
+                        data-testid="register-password-form"
+                        placeholder="password"
                         onChange={formik.handleChange}
                         value={formik.values.password}
                       />
@@ -160,9 +164,30 @@ const Register = () => {
                       </div>
                     </CInputGroup>
 
+                    <CInputGroup className="mb-4">
+                      <CInputGroupText>
+                        <i className="fa fa-key"></i>
+                      </CInputGroupText>
+                      <CFormInput
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        data-testid="register-repeat-password-form"
+                        placeholder="confirm password"
+                        onChange={formik.handleChange}
+                        value={formik.values.confirm_password}
+                      />
+                      <div
+                        className="error_form_response"
+                        data-testid="register-repeat-password-validation-response"
+                      >
+                        {formik.errors.confirm_password ? <div>{formik.errors.confirm_password}</div> : null}
+                      </div>
+                    </CInputGroup>
+
                     <div className="d-grid">
-                      <CButton color="primary" className="added-btn-style">
-                        Login
+                      <CButton color="primary" type='submit' className="added-btn-style">
+                        SignUp
                       </CButton>
                     </div>
 

@@ -8,15 +8,15 @@ import { Provider } from 'react-redux'
 import store from './store'
 // import { client } from './httpCallSetUp/ApolloClientProvider'
 // import {  ApolloProvider } from '@apollo/client';
-import { QueryClient, QueryClientProvider } from 'react-query'
+// import { QueryClient, QueryClientProvider } from 'react-query'
 
-const queryClient = new QueryClient()
+// const queryClient = new QueryClient()
 
 ReactDOM.render(
   <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
+    {/* <QueryClientProvider client={queryClient}> */}
       <App />
-    </QueryClientProvider>
+    {/* </QueryClientProvider> */}
   </Provider>,
   document.getElementById('root'),
 )

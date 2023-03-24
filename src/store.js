@@ -15,3 +15,4 @@ const changeState = (state = initialState, { type, ...rest }) => {
 
 const store = configureStore({ reducer: { changeState } })
 export default store
+
