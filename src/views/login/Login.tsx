@@ -147,10 +147,9 @@ const Login = () => {
 
                       <CCol xs={12} className="login-with-socials">
                         <label className="login-social-icon">
-                          <span className='login-social-icon-span'>Login with Social</span>
+                          <span className="login-social-icon-span">Login with Social</span>
                         </label>
                         <div className="d-flex justify-content-center">
-
                           <a href="#">
                             <div className="social-login me-4 text-center">
                               <i className="fa fa-google"></i>
@@ -162,7 +161,6 @@ const Login = () => {
                               <i className="fa fa-apple"></i>
                             </div>
                           </a>
-
                         </div>
                       </CCol>
                     </CRow>
@@ -178,5 +176,3 @@ const Login = () => {
 }
 
 export default Login
-
-

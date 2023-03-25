@@ -12,6 +12,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CAlert
 } from '@coreui/react'
 import { FormikValues, useFormik } from 'formik'
 import Cookies from 'js-cookie'
@@ -20,22 +21,51 @@ import { useHistory } from 'react-router-dom'
 import { JWT_TOKEN_KEY } from '../../constants'
 import './register.scss'
 import logo from '../../assets/images/logo.png'
+import { useUserRegisterMutation } from '../../http/ApiSetup'
+import { InfinitySpin, ThreeDots } from 'react-loader-spinner'
+import * as _ from 'lodash';
+
+
+
 
 const Register = () => {
   const history = useHistory()
+  const [userRegister, { isError, isLoading, isSuccess, data, error } ] = useUserRegisterMutation();
+  const [ErrorAlert, setErrorAlert] = useState('');
+  const [SuccessAlert, setSuccessAlert] = useState('');
+
+  useEffect(() => {
+
+  }, [isSuccess])
+
+  useEffect(() => {
+    if(isError){
+      console.log(error);
+      const errResponse = error as any;
+      const errMessages = errResponse?.data?.error;
+      const errMessagesAsArrays = Object.keys(errMessages).map((key,index) => errMessages[key][0])
+          if(!_.isEmpty(errMessagesAsArrays) ){
+          setErrorAlert(errMessagesAsArrays[0]);
+         }else{
+         setErrorAlert(errResponse?.message)
+        }
+    }
+  }, [isError])
+
+
+
 
   const formik: FormikValues = useFormik({
     initialValues: {
-      first_name:'',
-      last_name:'',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
       confirm_password: '',
     },
     validate,
     onSubmit: (values: any) => {
-
-      console.log(values)
+      userRegister(values)
     },
   })
 
@@ -71,16 +101,29 @@ const Register = () => {
                     <h3 className="auth-header">SignUp</h3>
 
                     <div className="response responseContentDiv" data-testid="responseLoginDiv">
-                      {
-                        //     isLoading ?
-                        //     <div className="loading-text">loading.....</div>
-                        //     :
-                        // error!==void 0 &&  error?.message ?
-                        // <div className="error_form_response" data-testid="error_form_response">{error?.message}</div>
-                        //  :
+                      {isError && (
+                     <CAlert color="danger" data-testid="register-error-response">
+                      {ErrorAlert}
+                      </CAlert>
+                      )}
+                      {isSuccess && (
+                        <CAlert color="success" data-testid="register-success-response">
+                          {data.message}
+                        </CAlert>
+                      )}
 
-                        null
-                      }
+
+                     <ThreeDots
+                     height="50"
+                     width="50"
+                     radius="9"
+                     color="#6c5ffc"
+                     ariaLabel="three-dots-loading"
+                     wrapperClass="three-dots-loader-style"
+                     visible={isLoading}
+                      />
+
+
                     </div>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -121,7 +164,6 @@ const Register = () => {
                         {formik.errors.last_name ? <div>{formik.errors.last_name}</div> : null}
                       </div>
                     </CInputGroup>
-
 
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -181,12 +223,17 @@ const Register = () => {
                         className="error_form_response"
                         data-testid="register-repeat-password-validation-response"
                       >
-                        {formik.errors.confirm_password ? <div>{formik.errors.confirm_password}</div> : null}
+                        {formik.errors.confirm_password ? (
+                          <div>{formik.errors.confirm_password}</div>
+                        ) : null}
                       </div>
                     </CInputGroup>
 
                     <div className="d-grid">
-                      <CButton color="primary" type='submit' className="added-btn-style">
+                      <CButton color="primary" type="submit"
+                      className="added-btn-style"
+                      disabled={isLoading}
+                      >
                         SignUp
                       </CButton>
                     </div>
@@ -214,10 +261,9 @@ const Register = () => {
 
                       <CCol xs={12} className="login-with-socials">
                         <label className="login-social-icon">
-                          <span className='login-social-icon-span'>Login with Social</span>
+                          <span className="login-social-icon-span">Login with Social</span>
                         </label>
                         <div className="d-flex justify-content-center">
-
                           <a href="#">
                             <div className="social-login me-4 text-center">
                               <i className="fa fa-google"></i>
@@ -229,7 +275,6 @@ const Register = () => {
                               <i className="fa fa-apple"></i>
                             </div>
                           </a>
-
                         </div>
                       </CCol>
                     </CRow>
@@ -245,5 +290,3 @@ const Register = () => {
 }
 
 export default Register
-
-

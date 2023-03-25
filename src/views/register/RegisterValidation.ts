@@ -11,9 +11,13 @@ export const validate = (values: any): any => {
   errors.password = values.password == '' ? 'Password Field is Required' : ''
   errors.password = values.password.length < 6 ? 'Password must be at least 6 characters' : ''
   errors.password = values.password.length > 20 ? 'Password must be less than 20 characters' : ''
-  errors.password = !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/.test(values.password) ? 'Password must contain at least one uppercase letter, one lowercase letter, and one number' : '';
-  errors.confirm_password = values.confirm_password == '' ? 'Confirm Password Field is Required' : ''
-  errors.confirm_password = values.confirm_password !== values.password ? 'Passwords do not match' : ''
+  errors.password = !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/.test(values.password)
+    ? 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    : ''
+  errors.confirm_password =
+    values.confirm_password == '' ? 'Confirm Password Field is Required' : ''
+  errors.confirm_password =
+    values.confirm_password !== values.password ? 'Passwords do not match' : ''
 
   const validateObj = validateObject(errors)
 

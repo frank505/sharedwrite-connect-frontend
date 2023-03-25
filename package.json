@@ -26,7 +26,6 @@
     "coreui_library_short_version": "4.0"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui": "^4.0.5",
     "@coreui/icons": "^2.1.0",
@@ -57,13 +56,13 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.2.9",
     "js-cookie": "^3.0.1",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.2",
     "react-js-pagination": "^3.0.3",
-    "react-loader-spinner": "^6.0.0-0",
-    "react-query": "^3.34.20",
+    "react-loader-spinner": "^5.3.4",
     "react-redux": "^8.0.5",
     "react-router-dom": "^5.3.0",
     "react-test-renderer": "^17.0.2",
@@ -75,6 +74,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
