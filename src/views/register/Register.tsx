@@ -30,27 +30,35 @@ import * as _ from 'lodash';
 
 const Register = () => {
   const history = useHistory()
-  const [userRegister, { isError, isLoading, isSuccess, data, error } ] = useUserRegisterMutation();
+  const [userRegister, result] = useUserRegisterMutation();
   const [ErrorAlert, setErrorAlert] = useState('');
   const [SuccessAlert, setSuccessAlert] = useState('');
 
+  useEffect(()=> {
+  console.log(result);
+  },[result])
+
   useEffect(() => {
 
-  }, [isSuccess])
+    if(result.isSuccess){
+      console.log('hello world');
+      history.push('/login')
+    }
+
+  }, [result.isSuccess])
 
   useEffect(() => {
-    if(isError){
-      console.log(error);
-      const errResponse = error as any;
+    if(result.isError){
+      const errResponse = result.error as any;
       const errMessages = errResponse?.data?.error;
-      const errMessagesAsArrays = Object.keys(errMessages).map((key,index) => errMessages[key][0])
+      const errMessagesAsArrays = !_.isNil(errMessages) ? Object.keys(errMessages).map((key) => errMessages[key][0]) : ['failed to register']
           if(!_.isEmpty(errMessagesAsArrays) ){
           setErrorAlert(errMessagesAsArrays[0]);
          }else{
          setErrorAlert(errResponse?.message)
         }
     }
-  }, [isError])
+  }, [result.isError])
 
 
 
@@ -96,20 +104,15 @@ const Register = () => {
                   <CForm
                     className="add-padding-to-form-card"
                     onSubmit={formik.handleSubmit}
-                    data-testid="form-login-container"
+                    data-testid="form-register-container"
                   >
                     <h3 className="auth-header">SignUp</h3>
 
                     <div className="response responseContentDiv" data-testid="responseLoginDiv">
-                      {isError && (
+                      {result.isError && (
                      <CAlert color="danger" data-testid="register-error-response">
                       {ErrorAlert}
                       </CAlert>
-                      )}
-                      {isSuccess && (
-                        <CAlert color="success" data-testid="register-success-response">
-                          {data.message}
-                        </CAlert>
                       )}
 
 
@@ -120,7 +123,7 @@ const Register = () => {
                      color="#6c5ffc"
                      ariaLabel="three-dots-loading"
                      wrapperClass="three-dots-loader-style"
-                     visible={isLoading}
+                     visible={result.isLoading}
                       />
 
 
@@ -173,13 +176,13 @@ const Register = () => {
                         placeholder="Email"
                         id="email"
                         name="email"
-                        data-testid="login-email-form"
+                        data-testid="register-email-form"
                         onChange={formik.handleChange}
                         value={formik.values.email}
                       />
                       <div
                         className="error_form_response"
-                        data-testid="login-email-validation-response"
+                        data-testid="register-email-validation-response"
                       >
                         {formik.errors.email ? <div>{formik.errors.email}</div> : null}
                       </div>
@@ -200,7 +203,7 @@ const Register = () => {
                       />
                       <div
                         className="error_form_response"
-                        data-testid="login-password-validation-response"
+                        data-testid="register-password-validation-response"
                       >
                         {formik.errors.password ? <div>{formik.errors.password}</div> : null}
                       </div>
@@ -214,14 +217,14 @@ const Register = () => {
                         type="password"
                         id="confirm_password"
                         name="confirm_password"
-                        data-testid="register-repeat-password-form"
+                        data-testid="register-confirm-password-form"
                         placeholder="confirm password"
                         onChange={formik.handleChange}
                         value={formik.values.confirm_password}
                       />
                       <div
                         className="error_form_response"
-                        data-testid="register-repeat-password-validation-response"
+                        data-testid="register-confirm-password-validation-response"
                       >
                         {formik.errors.confirm_password ? (
                           <div>{formik.errors.confirm_password}</div>
@@ -232,7 +235,7 @@ const Register = () => {
                     <div className="d-grid">
                       <CButton color="primary" type="submit"
                       className="added-btn-style"
-                      disabled={isLoading}
+                      disabled={result.isLoading}
                       >
                         SignUp
                       </CButton>
@@ -243,7 +246,7 @@ const Register = () => {
                         <CButton
                           color="link"
                           className="px-0"
-                          data-testid="go-to-forgot-password-page"
+                          data-testid="go-to-login-page"
                           onClick={goToLoginPage}
                         >
                           Login

@@ -15,6 +15,7 @@ module.exports = {
     '!src/polyfill.js',
   ],
   transformIgnorePatterns: ['node_modules/(?!(@coreui|tippy.js|perfect-scrollbar)/)'],
+  setupFilesAfterEnv: ['./src/setupTests.js'],
   // collectCoverageFrom: [
   //   "src/**/*.{js,jsx}",
   //   "!**/node_modules/**",
