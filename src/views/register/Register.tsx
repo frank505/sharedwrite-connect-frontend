@@ -12,7 +12,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-  CAlert
+  CAlert,
 } from '@coreui/react'
 import { FormikValues, useFormik } from 'formik'
 import Cookies from 'js-cookie'
@@ -23,45 +23,35 @@ import './register.scss'
 import logo from '../../assets/images/logo.png'
 import { useUserRegisterMutation } from '../../http/ApiSetup'
 import { InfinitySpin, ThreeDots } from 'react-loader-spinner'
-import * as _ from 'lodash';
-
-
-
+import * as _ from 'lodash'
 
 const Register = () => {
   const history = useHistory()
-  const [userRegister, result] = useUserRegisterMutation();
-  const [ErrorAlert, setErrorAlert] = useState('');
-  const [SuccessAlert, setSuccessAlert] = useState('');
-
-  useEffect(()=> {
-  console.log(result);
-  },[result])
+  const [userRegister, result] = useUserRegisterMutation()
+  const [ErrorAlert, setErrorAlert] = useState('')
+  const [SuccessAlert, setSuccessAlert] = useState('')
 
   useEffect(() => {
-
-    if(result.isSuccess){
-      console.log('hello world');
+    if (result.isSuccess) {
+      console.log('hello world')
       history.push('/login')
     }
-
   }, [result.isSuccess])
 
   useEffect(() => {
-    if(result.isError){
-      const errResponse = result.error as any;
-      const errMessages = errResponse?.data?.error;
-      const errMessagesAsArrays = !_.isNil(errMessages) ? Object.keys(errMessages).map((key) => errMessages[key][0]) : ['failed to register']
-          if(!_.isEmpty(errMessagesAsArrays) ){
-          setErrorAlert(errMessagesAsArrays[0]);
-         }else{
-         setErrorAlert(errResponse?.message)
-        }
+    if (result.isError) {
+      const errResponse = result.error as any
+      const errMessages = errResponse?.data?.error
+      const errMessagesAsArrays = !_.isNil(errMessages)
+        ? Object.keys(errMessages).map((key) => errMessages[key][0])
+        : ['failed to register']
+      if (!_.isEmpty(errMessagesAsArrays)) {
+        setErrorAlert(errMessagesAsArrays[0])
+      } else {
+        setErrorAlert(errResponse?.message)
+      }
     }
   }, [result.isError])
-
-
-
 
   const formik: FormikValues = useFormik({
     initialValues: {
@@ -108,26 +98,29 @@ const Register = () => {
                   >
                     <h3 className="auth-header">SignUp</h3>
 
-                    <div className="response responseContentDiv" data-testid="responseLoginDiv">
+                    <div
+                      className="response responseContentDiv"
+                      data-testid="response-register-err-div"
+                    >
                       {result.isError && (
-                     <CAlert color="danger" data-testid="register-error-response">
-                      {ErrorAlert}
-                      </CAlert>
+                        <CAlert color="danger" data-testid="register-error-response">
+                          {ErrorAlert}
+                        </CAlert>
                       )}
 
-
-                     <ThreeDots
-                     height="50"
-                     width="50"
-                     radius="9"
-                     color="#6c5ffc"
-                     ariaLabel="three-dots-loading"
-                     wrapperClass="three-dots-loader-style"
-                     visible={result.isLoading}
-                      />
-
-
+                      {result.isLoading ?? (
+                        <ThreeDots
+                          height="50"
+                          width="50"
+                          radius="9"
+                          color="#6c5ffc"
+                          ariaLabel="three-dots-loading"
+                          wrapperClass="three-dots-loader-style"
+                          visible={true}
+                        />
+                      )}
                     </div>
+
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <i className="fa fa-user"></i>
@@ -233,9 +226,11 @@ const Register = () => {
                     </CInputGroup>
 
                     <div className="d-grid">
-                      <CButton color="primary" type="submit"
-                      className="added-btn-style"
-                      disabled={result.isLoading}
+                      <CButton
+                        color="primary"
+                        type="submit"
+                        className="added-btn-style"
+                        disabled={result.isLoading}
                       >
                         SignUp
                       </CButton>

@@ -7,12 +7,10 @@ import { Provider } from 'react-redux'
 import { v1Api } from '../src/http/ApiSetup'
 import { RootReducer } from '../src/store/Reducers/RootReducer'
 
-
-
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
-  preloadedState?: PreloadedState<any>,
+  preloadedState?: PreloadedState<any>
   store?: any
 }
 
@@ -27,8 +25,7 @@ export function renderWithProviders(
         [v1Api.reducerPath]: v1Api.reducer,
       },
       preloadedState,
-      middleware: getDefaultMiddleware =>
-        getDefaultMiddleware().concat(v1Api.middleware),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(v1Api.middleware),
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {},

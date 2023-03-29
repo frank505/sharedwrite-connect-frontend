@@ -1,36 +1,36 @@
 import Register from './Register'
 import { fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Cookies from 'js-cookie'
-import { renderWithProviders as TestWrapper } from '../../../jest/TestWrapper';
-import { useUserRegisterMutation, v1Api } from '../../http/ApiSetup';
-import { renderHook } from '@testing-library/react-hooks';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-import { server, baseTestUrl } from '../../setupTests';
-
+import { renderWithProviders as TestWrapper } from '../../../jest/TestWrapper'
+import { rest } from 'msw'
+import { server, baseTestUrl } from '../../setupTests'
 
 // Replace with your own RTK query API
 
-const response:any = {
-  isLoading: false, isSuccess: true, isError: false, data: {
+const response: any = {
+  isLoading: false,
+  isSuccess: true,
+  isError: false,
+  data: {
     success: true,
-    data:[],
-    message:'email verification code has been sent to your email'
-  }, error: null
+    data: [],
+    message: 'email verification code has been sent to your email',
+  },
+  error: null,
 }
 
-// const server = setupServer(
-//   rest.all('http://localhost:80/api/*', (req, res, ctx) => {
-//     // Replace with your own mocked response data
-//     return res(ctx.status(200), ctx.json(response));
-//   }),
-// );
-
-// beforeAll(() => server.listen());
-// afterAll(() => server.close());
-// afterEach(() => server.resetHandlers());
-
+const errResponse = {
+  isLoading: false,
+  isSuccess: false,
+  isError: true,
+  data: null,
+  error: {
+    success: false,
+    error: {
+      email: ['Email already exists'],
+    },
+  },
+}
 
 const mockHistoryPush = jest.fn()
 
@@ -46,25 +46,38 @@ const renderComponent = () => {
 }
 
 const setup = async () => {
-  const { findByTestId } = renderComponent()
+  const { findByTestId, getByText } = renderComponent()
   const RegisterRoot = await findByTestId('register-root')
   const RegisterEmail = await findByTestId('register-email-form')
-  const RegisterPassword = await findByTestId('register-password-form');
-  const RegisterFirstName = await findByTestId('register-first-name-form');
-  const RegisterLastName = await findByTestId('register-last-name-form');
-  const RegisterEmailValidationResponse = await findByTestId('register-email-validation-response');
-  const RegisterPasswordValidationResponse = await findByTestId('register-password-validation-response');
-  const RegisterFirstNameValidationResponse = await findByTestId('register-first-name-validation-response');
-  const RegisterLastNameValidationResponse = await findByTestId('register-last-name-validation-response');
+  const RegisterPassword = await findByTestId('register-password-form')
+  const RegisterConfirmPassword = await findByTestId('register-confirm-password-form')
+  const RegisterFirstName = await findByTestId('register-first-name-form')
+  const RegisterLastName = await findByTestId('register-last-name-form')
+  const RegisterConfirmPasswordValidationResponse = await findByTestId(
+    'register-confirm-password-validation-response',
+  )
+  const RegisterEmailValidationResponse = await findByTestId('register-email-validation-response')
+  const RegisterPasswordValidationResponse = await findByTestId(
+    'register-password-validation-response',
+  )
+  const RegisterFirstNameValidationResponse = await findByTestId(
+    'register-first-name-validation-response',
+  )
+  const RegisterLastNameValidationResponse = await findByTestId(
+    'register-last-name-validation-response',
+  )
   const formRegisterContainer = await findByTestId('form-register-container')
   const goToForgotPasswordPage = await findByTestId('go-to-forgot-password-page')
   const goToLoginPage = await findByTestId('go-to-login-page')
+  const ResponseRegisterErrDiv = await findByTestId('response-register-err-div')
 
   return {
     RegisterRoot,
     RegisterEmail,
     RegisterPassword,
+    RegisterConfirmPassword,
     RegisterEmailValidationResponse,
+    RegisterConfirmPasswordValidationResponse,
     RegisterPasswordValidationResponse,
     RegisterFirstName,
     RegisterLastName,
@@ -72,7 +85,10 @@ const setup = async () => {
     RegisterLastNameValidationResponse,
     formRegisterContainer,
     goToForgotPasswordPage,
-    goToLoginPage
+    goToLoginPage,
+    findByTestId,
+    getByText,
+    ResponseRegisterErrDiv,
   }
 }
 
@@ -103,23 +119,25 @@ describe('Register component', () => {
       RegisterFirstName,
       RegisterFirstNameValidationResponse,
       RegisterLastName,
-      RegisterLastNameValidationResponse
+      RegisterLastNameValidationResponse,
+      RegisterConfirmPassword,
+      RegisterConfirmPasswordValidationResponse,
     } = await setup()
-    userEvent.type(RegisterEmail, 'ddd');
-
+    userEvent.type(RegisterEmail, 'ddd')
 
     await waitFor(() => {
       expect(RegisterEmailValidationResponse.innerHTML).not.toBe('')
     })
     userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
     userEvent.type(RegisterPassword, '$AQWSDC12s22.sdewesw23455ded')
-    userEvent.type(RegisterFirstName, 'Franklin'),
-    userEvent.type(RegisterLastName, 'Akpu')
+    userEvent.type(RegisterConfirmPassword, '$AQWSDC12s22.sdewesw23455ded')
+    userEvent.type(RegisterFirstName, 'Franklin'), userEvent.type(RegisterLastName, 'Akpu')
     await waitFor(() => {
       expect(RegisterEmailValidationResponse.innerHTML).toBe('')
       expect(RegisterPasswordValidationResponse.innerHTML).toBe('')
       expect(RegisterFirstNameValidationResponse.innerHTML).toBe('')
       expect(RegisterLastNameValidationResponse.innerHTML).toBe('')
+      expect(RegisterConfirmPasswordValidationResponse.innerHTML).toBe('')
     })
   })
 
@@ -127,112 +145,88 @@ describe('Register component', () => {
     const { goToForgotPasswordPage } = await setup()
     userEvent.click(goToForgotPasswordPage)
     expect(mockHistoryPush).toHaveBeenCalled()
-  });
+  })
 
- it('goes to login page', async ()=> {
-    const {goToLoginPage} = await setup()
+  it('goes to login page', async () => {
+    const { goToLoginPage } = await setup()
     userEvent.click(goToLoginPage)
-    expect(mockHistoryPush).toHaveBeenCalled()
- })
-
-
- it.only('submit form and Register was not successful and redirects to verify passcode', async () => {
-
-  const {
-    RegisterEmail,
-    RegisterEmailValidationResponse,
-    RegisterPassword,
-    RegisterPasswordValidationResponse,
-    RegisterFirstName,
-    RegisterFirstNameValidationResponse,
-    RegisterLastName,
-    RegisterLastNameValidationResponse,
-    formRegisterContainer
-  } = await setup();
-  userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
-  userEvent.type(RegisterPassword, '$AQWSDC12s22.sdewesw23455ded')
-  userEvent.type(RegisterFirstName, 'Franklin'),
-  userEvent.type(RegisterLastName, 'Akpu');
-
-
-//  const {result} = renderHook(() => useUserRegisterMutation({
-//     email: 'akpufranklin2@gmail.com',
-//     password: '$AQWSDC12s22.sdewesw23455ded',
-//     firstName: 'Franklin',
-//     lastName: 'Akpu'
-//   } as any));
-  server.use(rest.post(`${baseTestUrl}register`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(response));
-  }));
-
-
-  fireEvent.submit(formRegisterContainer);
-
-  await waitFor(() => {
-    expect(RegisterEmailValidationResponse.innerHTML).toBe('')
-    expect(RegisterPasswordValidationResponse.innerHTML).toBe('')
-    expect(RegisterFirstNameValidationResponse.innerHTML).toBe('')
-    expect(RegisterLastNameValidationResponse.innerHTML).toBe('')
     expect(mockHistoryPush).toHaveBeenCalled()
   })
 
+  it('submit form and Register was successful and redirects to verify passcode', async () => {
+    const {
+      RegisterEmail,
+      RegisterEmailValidationResponse,
+      RegisterPassword,
+      RegisterPasswordValidationResponse,
+      RegisterFirstName,
+      RegisterFirstNameValidationResponse,
+      RegisterLastName,
+      RegisterLastNameValidationResponse,
+      formRegisterContainer,
+      RegisterConfirmPassword,
+      RegisterConfirmPasswordValidationResponse,
+      findByTestId,
+    } = await setup()
+    userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
+    userEvent.type(RegisterPassword, '$AQWSDC12s22.sdewesw23455ded')
+    userEvent.type(RegisterConfirmPassword, '$AQWSDC12s22.sdewesw23455ded')
+    userEvent.type(RegisterFirstName, 'Franklin'), userEvent.type(RegisterLastName, 'Akpu')
 
- });
+    server.use(
+      rest.post(`${baseTestUrl}/user/register`, (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json(response))
+      }),
+    )
 
-  // it('submit form and Register was successful', async () => {
-  //   const dataRes = {
-  //     data: {
-  //       RegisterAdmin: {
-  //         success: true,
-  //         token: 'sssss',
-  //       },
-  //     },
-  //   }
-  //   const mRes = { json: jest.fn().mockResolvedValueOnce(dataRes) }
-  //   const mockedFetch = jest.fn().mockResolvedValueOnce(mRes as any)
-  //   ;(global as any).fetch = mockedFetch
+    fireEvent.submit(formRegisterContainer)
 
-  //   const { RegisterEmail, RegisterPassword, formRegisterContainer } = await setup()
-  //   userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
-  //   userEvent.type(RegisterPassword, 'password')
+    await waitFor(() => {
+      expect(RegisterEmailValidationResponse.innerHTML).toBe('')
+      expect(RegisterPasswordValidationResponse.innerHTML).toBe('')
+      expect(RegisterFirstNameValidationResponse.innerHTML).toBe('')
+      expect(RegisterLastNameValidationResponse.innerHTML).toBe('')
+      expect(RegisterConfirmPasswordValidationResponse.innerHTML).toBe('')
+      expect(mockHistoryPush).toHaveBeenCalled()
+    })
+  })
 
-  //   let cookiesSetRes: any = true
+  it('submit form and Register was not successful ', async () => {
+    const {
+      RegisterEmail,
+      RegisterEmailValidationResponse,
+      RegisterPassword,
+      RegisterPasswordValidationResponse,
+      RegisterFirstName,
+      RegisterFirstNameValidationResponse,
+      RegisterLastName,
+      RegisterLastNameValidationResponse,
+      formRegisterContainer,
+      RegisterConfirmPassword,
+      RegisterConfirmPasswordValidationResponse,
+      ResponseRegisterErrDiv,
+      findByTestId,
+    } = await setup()
+    userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
+    userEvent.type(RegisterPassword, '$AQWSDC12s22.sdewesw23455ded')
+    userEvent.type(RegisterConfirmPassword, '$AQWSDC12s22.sdewesw23455ded')
+    userEvent.type(RegisterFirstName, 'Franklin'), userEvent.type(RegisterLastName, 'Akpu')
+    expect(ResponseRegisterErrDiv.innerHTML).toBe('')
 
-  //   jest.spyOn(Cookies, 'set').mockImplementationOnce(() => cookiesSetRes)
-  //   fireEvent.submit(formRegisterContainer)
-  //   await waitFor(() => {
-  //     expect(Cookies.set).toHaveBeenCalled()
-  //     expect(mockHistoryPush).toHaveBeenCalled()
-  //     expect(mockedFetch).toHaveBeenCalled()
-  //   })
-  // })
+    server.use(
+      rest.post(`${baseTestUrl}/user/register`, (req, res, ctx) => {
+        return res(ctx.status(400), ctx.json(errResponse))
+      }),
+    )
 
-  // it('submits form and Register failed', async () => {
-  //   const dataRes = {
-  //     data: {
-  //       RegisterAdmin: {
-  //         success: true,
-  //         token: 'sssss',
-  //       },
-  //     },
-  //     errors: [
-  //       {
-  //         message: 'failed',
-  //       },
-  //     ],
-  //   }
-  //   const mRes = { json: jest.fn().mockResolvedValueOnce(dataRes) }
-  //   const mockedFetch = jest.fn().mockResolvedValueOnce(mRes as any)
-  //   ;(global as any).fetch = mockedFetch
-
-  //   const { RegisterEmail, RegisterPassword, formRegisterContainer, responseRegisterDiv } =
-  //     await setup()
-  //   userEvent.type(RegisterEmail, 'akpufranklin2@gmail.com')
-  //   userEvent.type(RegisterPassword, 'pass')
-  //   fireEvent.submit(formRegisterContainer)
-  //   await waitFor(() => {
-  //     expect(responseRegisterDiv.innerHTML).not.toBe('')
-  //     expect(mockedFetch).toHaveBeenCalled()
-  //   })
-  // })
+    fireEvent.submit(formRegisterContainer)
+    await waitFor(() => {
+      expect(RegisterEmailValidationResponse.innerHTML).toBe('')
+      expect(RegisterPasswordValidationResponse.innerHTML).toBe('')
+      expect(RegisterFirstNameValidationResponse.innerHTML).toBe('')
+      expect(RegisterLastNameValidationResponse.innerHTML).toBe('')
+      expect(RegisterConfirmPasswordValidationResponse.innerHTML).toBe('')
+      expect(ResponseRegisterErrDiv.innerHTML).not.toBe('')
+    })
+  })
 })

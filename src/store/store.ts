@@ -1,4 +1,4 @@
-import { v1Api } from './../http/ApiSetup';
+import { v1Api } from './../http/ApiSetup'
 import { RootReducer } from './Reducers/RootReducer'
 // import { configureStore } from '@reduxjs/toolkit'
 
@@ -7,13 +7,11 @@ import { RootReducer } from './Reducers/RootReducer'
 import { configureStore, PreloadedState, combineReducers } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
-
-
 export const setupStore = (preloadedState?: PreloadedState<RootState>) =>
   configureStore({
     reducer: RootReducer,
     preloadedState,
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(v1Api.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(v1Api.middleware),
   })
 
 export const store = setupStore()

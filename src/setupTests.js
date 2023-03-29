@@ -9,29 +9,40 @@ global.Headers = Headers
 global.Request = Request
 global.Response = Response
 
-export const baseTestUrl = 'http://localhost/api/v1';
+export const baseTestUrl = 'http://localhost/api/v1'
 
 export const handlers = [
-  rest.all(`${baseTestUrl}/*`, (_req, res, ctx) => {
-    return res(ctx.status(200),  ctx.json(
-      {
-        isLoading: false, isSuccess: true, isError: false, data: {
+  rest.post(`${baseTestUrl}/v1/user/register`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        isLoading: false,
+        isSuccess: true,
+        isError: false,
+        data: {
           success: true,
-          data:[],
-          message:'email verification code has been sent to your email'
-        }, error: null
-      }
-    ))
+          data: [],
+          message: 'email verification code has been sent to your email',
+        },
+        error: null,
+      }),
+    )
   }),
 ]
 
 export const server = setupServer(...handlers)
 
 // Enable API mocking before tests.
-beforeAll(() => server.listen())
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'warn' })
+})
 
 // Reset any runtime request handlers we may add during the tests.
-afterEach(() => server.resetHandlers())
+afterEach(() => {
+  server.resetHandlers()
+})
 
 // Disable API mocking after the tests are done.
-afterAll(() => server.close())
+afterAll(() => {
+  server.close()
+})
