@@ -22,7 +22,7 @@ import { JWT_TOKEN_KEY } from '../../constants'
 import './register.scss'
 import logo from '../../assets/images/logo.png'
 import { useUserRegisterMutation } from '../../http/ApiSetup'
-import { InfinitySpin, ThreeDots } from 'react-loader-spinner'
+import {  ThreeDots } from 'react-loader-spinner'
 import * as _ from 'lodash'
 
 const Register = () => {
@@ -33,8 +33,7 @@ const Register = () => {
 
   useEffect(() => {
     if (result.isSuccess) {
-      console.log('hello world')
-      history.push('/login')
+      history.push('/verify-passcode')
     }
   }, [result.isSuccess])
 

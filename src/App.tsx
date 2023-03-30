@@ -39,6 +39,10 @@ const Page500: React.FunctionComponent<RouteComponentProps> = React.lazy(
   () => import('./views/pages/page500/Page500'),
 )
 
+const VerifyPasscode: React.FunctionComponent<RouteComponentProps> = React.lazy(
+  () => import('./views/verify-passcode/VerifyPasscode'),
+)
+
 const App: React.FunctionComponent = () => {
   return (
     <div data-testid="app-data-id">
@@ -47,6 +51,7 @@ const App: React.FunctionComponent = () => {
           <Switch>
             <Route exact={true} path="/login" component={Login} />
             <Route exact={true} path="/register" component={Register} />
+            <Route exact={true} path="/verify-passcode" component={VerifyPasscode} />
             <Route exact={true} path="/forgot-password" component={ForgotPassword} />
             <Route exact={true} path="/reset-password" component={ResetPassword} />
             <Route exact={true} path="/404" component={Page404} />
