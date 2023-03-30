@@ -50,8 +50,13 @@ const VerifyPasscode = () => {
     history.push('/login')
   }
 
+
+  const requestNewPasscode = (): void => {
+
+  }
+
   return (
-  <div className="set-background-img min-vh-100 d-flex flex-row align-items-center"
+  <div className=" min-vh-100 d-flex flex-row align-items-center"
     id="containerVerifyPasscode"
     data-testid="register-root" >
       <CContainer>
@@ -128,6 +133,19 @@ const VerifyPasscode = () => {
                     </div>
 
                     <CRow>
+
+                    <CCol xs={12} className="links-section-on-auth">
+                        <CButton
+                          color="link"
+                          className="px-0"
+                          data-testid="go-to-login-page"
+                          onClick={requestNewPasscode}
+                        >
+                          Request New Passcode
+                        </CButton>
+
+                      </CCol>
+
                       <CCol xs={12} className="links-section-on-auth">
                         <CButton
                           color="link"
@@ -147,8 +165,6 @@ const VerifyPasscode = () => {
                           Register
                         </CButton>
                       </CCol>
-
-
                     </CRow>
                   </CForm>
                 </CCardBody>

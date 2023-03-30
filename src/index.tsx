@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 
-// const queryClient = new QueryClient()
+
 
 ReactDOM.render(
   <Provider store={store}>

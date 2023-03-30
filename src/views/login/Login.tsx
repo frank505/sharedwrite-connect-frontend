@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <div
-      className="set-background-img min-vh-100 d-flex flex-row align-items-center"
+      className=" min-vh-100 d-flex flex-row align-items-center"
       id="containerLogin"
       data-testid="login-root"
     >

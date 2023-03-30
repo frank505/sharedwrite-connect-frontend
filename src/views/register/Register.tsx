@@ -18,7 +18,7 @@ import { FormikValues, useFormik } from 'formik'
 import Cookies from 'js-cookie'
 import { validate } from './RegisterValidation'
 import { useHistory } from 'react-router-dom'
-import { JWT_TOKEN_KEY } from '../../constants'
+import { VERIFY_PASSCODE_PARAM } from '../../constants'
 import './register.scss'
 import logo from '../../assets/images/logo.png'
 import { useUserRegisterMutation } from '../../http/ApiSetup'
@@ -33,6 +33,7 @@ const Register = () => {
 
   useEffect(() => {
     if (result.isSuccess) {
+     Cookies.set(VERIFY_PASSCODE_PARAM, result.data?.data?.url_params);
       history.push('/verify-passcode')
     }
   }, [result.isSuccess])
@@ -76,7 +77,7 @@ const Register = () => {
 
   return (
     <div
-      className="set-background-img min-vh-100 d-flex flex-row align-items-center"
+      className=" min-vh-100 d-flex flex-row align-items-center"
       id="containerRegister"
       data-testid="register-root"
     >

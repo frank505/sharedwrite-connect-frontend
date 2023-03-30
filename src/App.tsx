@@ -4,7 +4,12 @@ import { HashRouter, Route, Switch, Redirect, RouteComponentProps } from 'react-
 import { JWT_TOKEN_KEY } from './constants'
 import { Gaurd } from './gaurd/Gaurd'
 import './scss/style.scss'
-import 'font-awesome/css/font-awesome.min.css'
+import 'font-awesome/css/font-awesome.min.css';
+import Register from './views/register';
+import Login from './views/login'
+import VerifyPasscode from './views/verify-passcode'
+
+
 
 // Cookies.remove(JWT_TOKEN_KEY);
 
@@ -20,18 +25,13 @@ const DefaultLayout: React.FunctionComponent<RouteComponentProps> = React.lazy(
 )
 
 // Pages
-const Login: React.FunctionComponent<RouteComponentProps> = React.lazy(
-  () => import('./views/login'),
-)
 const ForgotPassword: React.FunctionComponent<RouteComponentProps> = React.lazy(
   () => import('./views/forgotpassword'),
 )
 const ResetPassword: React.FunctionComponent<RouteComponentProps> = React.lazy(
   () => import('./views/resetpassword'),
 )
-const Register: React.FunctionComponent<RouteComponentProps> = React.lazy(
-  () => import('./views/register'),
-)
+
 const Page404: React.FunctionComponent<RouteComponentProps> = React.lazy(
   () => import('./views/pages/page404/Page404'),
 )
@@ -39,11 +39,12 @@ const Page500: React.FunctionComponent<RouteComponentProps> = React.lazy(
   () => import('./views/pages/page500/Page500'),
 )
 
-const VerifyPasscode: React.FunctionComponent<RouteComponentProps> = React.lazy(
-  () => import('./views/verify-passcode/VerifyPasscode'),
-)
+
 
 const App: React.FunctionComponent = () => {
+
+
+
   return (
     <div data-testid="app-data-id">
       <HashRouter>
