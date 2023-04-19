@@ -14,9 +14,27 @@ export const v1Api = createApi({
 
       // transformResponse: (response: { data: any }, meta, arg) => response.data,
     }),
+    passcodeVerify: builder.mutation({
+      query: (body) => ({
+        url: '/user/verify-account',
+        method: 'PUT',
+        body,
+      }),
+
+      // transformResponse: (response: { data: any }, meta, arg) => response.data,
+    }),
+    resendVerifyAccount: builder.mutation({
+      query: (body) => ({
+        url: '/user/resend-email-verification-token',
+        method: 'POST',
+        body,
+      }),
+
+      // transformResponse: (response: { data: any }, meta, arg) => response.data,
+    }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useUserRegisterMutation } = v1Api
+export const { useUserRegisterMutation, usePasscodeVerifyMutation, useResendVerifyAccountMutation } = v1Api

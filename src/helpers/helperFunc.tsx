@@ -4,7 +4,8 @@ import * as swal from 'sweetalert2'
 import { ConvertTimeStampToCurrentDateTimeType } from './types'
 import * as H from 'history'
 import Cookies from 'js-cookie'
-import { JWT_TOKEN_KEY } from '../constants'
+import { JWT_TOKEN_KEY } from '../constants';
+import * as _ from 'lodash';
 
 export const useFormFields = (initialState: any) => {
   const [fields, setValues] = useState<any>(initialState)
@@ -64,4 +65,15 @@ export const convertTimeStampToCurrentDateTime = (
 export const removeTokenAndRedirectToLogin = (history: H.History<H.LocationState>): void => {
   Cookies.remove(JWT_TOKEN_KEY)
   history.push('/login')
+}
+
+
+
+export const getErrorMessage = (errResponse: any, setErrorAlert: SetStateAction<any>, messageArray: Array<any>) => {
+  // const errResponse = result.error as any
+      const errMessages = errResponse?.data?.error;
+      let errMessagesAsArrays:any = null;
+      errMessagesAsArrays = !_.isEmpty(errMessages) ? Object.keys(errMessages).map((key) => errMessages[key][0])
+      : [errResponse?.data?.message] || messageArray;
+      setErrorAlert(errMessagesAsArrays[0]);
 }

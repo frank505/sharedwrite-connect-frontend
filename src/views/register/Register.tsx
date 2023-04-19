@@ -24,6 +24,7 @@ import logo from '../../assets/images/logo.png'
 import { useUserRegisterMutation } from '../../http/ApiSetup'
 import {  ThreeDots } from 'react-loader-spinner'
 import * as _ from 'lodash'
+import { getErrorMessage } from '../../helpers/helperFunc'
 
 const Register = () => {
   const history = useHistory()
@@ -40,16 +41,7 @@ const Register = () => {
 
   useEffect(() => {
     if (result.isError) {
-      const errResponse = result.error as any
-      const errMessages = errResponse?.data?.error
-      const errMessagesAsArrays = !_.isNil(errMessages)
-        ? Object.keys(errMessages).map((key) => errMessages[key][0])
-        : ['failed to register']
-      if (!_.isEmpty(errMessagesAsArrays)) {
-        setErrorAlert(errMessagesAsArrays[0])
-      } else {
-        setErrorAlert(errResponse?.message)
-      }
+      getErrorMessage(result?.error, setErrorAlert, ['failed to register user']);
     }
   }, [result.isError])
 

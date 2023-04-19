@@ -20,25 +20,47 @@ import { FormikValues, useFormik } from 'formik'
 import Cookies from 'js-cookie'
 import { validate } from './VerifyPasscodeValidation'
 import { useHistory } from 'react-router-dom'
-import { JWT_TOKEN_KEY } from '../../constants'
+import { JWT_TOKEN_KEY, VERIFY_PASSCODE_PARAM } from '../../constants'
 import logo from '../../assets/images/logo.png'
-import { useUserRegisterMutation } from '../../http/ApiSetup'
+import { useResendVerifyAccountMutation, usePasscodeVerifyMutation } from '../../http/ApiSetup'
 import {  ThreeDots } from 'react-loader-spinner'
 import * as _ from 'lodash'
+import { getErrorMessage } from '../../helpers/helperFunc';
 
 const VerifyPasscode = () => {
   const history = useHistory()
-  const [userRegister, result] = useUserRegisterMutation()
+  const [passcodeVerify, result ] = usePasscodeVerifyMutation();
+  const [resendVerifyAccount, resultData ] = useResendVerifyAccountMutation();
   const [ErrorAlert, setErrorAlert] = useState('')
   const [SuccessAlert, setSuccessAlert] = useState('')
 
+  useEffect(()=> {
+   const token = Cookies.get(VERIFY_PASSCODE_PARAM);
+   if(_.isEmpty(token)){
+      history.push('/login');
+   }
+  }, [])
+
+  useEffect(() => {
+    if (result.isError) {
+      console.log('result.error', result.error);
+      getErrorMessage(result?.error, setErrorAlert, ['failed to verify passcode']);
+    }
+  }, [result.isError]);
+
+  useEffect(() => {
+
+  }, [resultData.isSuccess]);
+
   const formik: FormikValues = useFormik({
     initialValues: {
-      passcode: '',
+       code: '',
+      purpose:'email_verification',
+      verify_passcode_token: Cookies.get(VERIFY_PASSCODE_PARAM)
     },
     validate,
     onSubmit: (values: any) => {
-      // userRegister(values)
+      passcodeVerify(values);
     },
   })
 
@@ -51,8 +73,12 @@ const VerifyPasscode = () => {
   }
 
 
-  const requestNewPasscode = (): void => {
-
+  const requestNewPasscode = () => {
+    const token = Cookies.get(VERIFY_PASSCODE_PARAM);
+    if(_.isEmpty(token)){
+     return history.push('/login');
+    }
+    resendVerifyAccount({purpose:'email_verification', verify_passcode_token: Cookies.get(VERIFY_PASSCODE_PARAM)})
   }
 
   return (
@@ -80,7 +106,7 @@ const VerifyPasscode = () => {
                       className="response responseContentDiv"
                       data-testid="response-register-err-div"
                     >
-                      {/* {result.isError && (
+                      {result.isError && (
                         <CAlert color="danger" data-testid="register-error-response">
                           {ErrorAlert}
                         </CAlert>
@@ -96,7 +122,7 @@ const VerifyPasscode = () => {
                           wrapperClass="three-dots-loader-style"
                           visible={true}
                         />
-                      )} */}
+                      )}
                     </div>
 
                     <CInputGroup className="mb-3">
@@ -105,17 +131,17 @@ const VerifyPasscode = () => {
                       </CInputGroupText>
                       <CFormInput
                         placeholder="Enter Passcode"
-                        id="passcode"
-                        name="passcode"
+                        id="code"
+                        name="code"
                         data-testid="register-first-name-form"
                         onChange={formik.handleChange}
-                        value={formik.values.passcode}
+                        value={formik.values.code}
                       />
                       <div
                         className="error_form_response"
                         data-testid="verify-passcode-passcode-validation-response"
                       >
-                        {formik.errors.passcode ? <div>{formik.errors.passcode}</div> : null}
+                        {formik.errors.code ? <div>{formik.errors.code}</div> : null}
                       </div>
                     </CInputGroup>
 
