@@ -11,7 +11,7 @@ export const v1Api = createApi({
         method: 'POST',
         body,
       }),
-
+      invalidatesTags: ['userRegister'],
       // transformResponse: (response: { data: any }, meta, arg) => response.data,
     }),
     passcodeVerify: builder.mutation({
@@ -20,7 +20,7 @@ export const v1Api = createApi({
         method: 'PUT',
         body,
       }),
-
+      invalidatesTags: ['passcodeVerify'],
       // transformResponse: (response: { data: any }, meta, arg) => response.data,
     }),
     resendVerifyAccount: builder.mutation({
@@ -29,12 +29,12 @@ export const v1Api = createApi({
         method: 'POST',
         body,
       }),
-
+      invalidatesTags: ['resendVerifyAccount'],
       // transformResponse: (response: { data: any }, meta, arg) => response.data,
     }),
   }),
+  tagTypes: ['resendVerifyAccount', 'passcodeVerify', 'userRegister'],
 })
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
-export const { useUserRegisterMutation, usePasscodeVerifyMutation, useResendVerifyAccountMutation } = v1Api
+
+export const { useUserRegisterMutation, usePasscodeVerifyMutation, useResendVerifyAccountMutation } = v1Api;

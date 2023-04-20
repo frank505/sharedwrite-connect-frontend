@@ -22,12 +22,15 @@ import { validate } from './VerifyPasscodeValidation'
 import { useHistory } from 'react-router-dom'
 import { JWT_TOKEN_KEY, VERIFY_PASSCODE_PARAM } from '../../constants'
 import logo from '../../assets/images/logo.png'
-import { useResendVerifyAccountMutation, usePasscodeVerifyMutation } from '../../http/ApiSetup'
+import { useResendVerifyAccountMutation, usePasscodeVerifyMutation, v1Api } from '../../http/ApiSetup'
 import {  ThreeDots } from 'react-loader-spinner'
 import * as _ from 'lodash'
 import { getErrorMessage } from '../../helpers/helperFunc';
+import { useDispatch } from 'react-redux';
+
 
 const VerifyPasscode = () => {
+  const dispatch = useDispatch();
   const history = useHistory()
   const [passcodeVerify, result ] = usePasscodeVerifyMutation();
   const [resendVerifyAccount, resultData ] = useResendVerifyAccountMutation();
@@ -41,15 +44,32 @@ const VerifyPasscode = () => {
    }
   }, [])
 
+
+  useEffect(()=> {
+    dispatch(v1Api.util.invalidateTags(['resendVerifyAccount']));
+  },[result])
+
+  useEffect(()=> {
+    dispatch(v1Api.util.invalidateTags(['passcodeVerify']));
+  },[resultData])
+
   useEffect(() => {
     if (result.isError) {
-      console.log('result.error', result.error);
       getErrorMessage(result?.error, setErrorAlert, ['failed to verify passcode']);
     }
   }, [result.isError]);
 
   useEffect(() => {
+    if (resultData.isError) {
+      getErrorMessage(resultData?.error, setErrorAlert, ['failed to resend passcode']);
+    }
+  }, [resultData.isError]);
 
+  useEffect(() => {
+    if (resultData.isSuccess) {
+      Cookies.set(VERIFY_PASSCODE_PARAM, resultData?.data?.data?.url_params);
+      setSuccessAlert(resultData?.data?.message);
+    }
   }, [resultData.isSuccess]);
 
   const formik: FormikValues = useFormik({
@@ -106,13 +126,13 @@ const VerifyPasscode = () => {
                       className="response responseContentDiv"
                       data-testid="response-register-err-div"
                     >
-                      {result.isError && (
+                      {(result.isError || resultData.isError ) && (
                         <CAlert color="danger" data-testid="register-error-response">
                           {ErrorAlert}
                         </CAlert>
                       )}
 
-                      {result.isLoading ?? (
+                      { (result.isLoading || resultData.isLoading) && (
                         <ThreeDots
                           height="50"
                           width="50"
@@ -123,6 +143,15 @@ const VerifyPasscode = () => {
                           visible={true}
                         />
                       )}
+
+
+                      { (resultData.isSuccess || result.isSuccess) &&  (
+                        <CAlert color="success" data-testid="register-success-response">
+                          {SuccessAlert}
+                        </CAlert>
+                      )}
+
+
                     </div>
 
                     <CInputGroup className="mb-3">
@@ -152,7 +181,7 @@ const VerifyPasscode = () => {
                         color="primary"
                         type="submit"
                         className="added-btn-style"
-                        disabled={result.isLoading}
+                        disabled={result.isLoading || resultData.isLoading}
                       >
                         Verify
                       </CButton>
