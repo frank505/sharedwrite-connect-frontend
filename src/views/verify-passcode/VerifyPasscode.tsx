@@ -45,14 +45,6 @@ const VerifyPasscode = () => {
   }, [])
 
 
-  useEffect(()=> {
-    dispatch(v1Api.util.invalidateTags(['resendVerifyAccount']));
-  },[result])
-
-  useEffect(()=> {
-    dispatch(v1Api.util.invalidateTags(['passcodeVerify']));
-  },[resultData])
-
   useEffect(() => {
     if (result.isError) {
       getErrorMessage(result?.error, setErrorAlert, ['failed to verify passcode']);
@@ -80,6 +72,8 @@ const VerifyPasscode = () => {
     },
     validate,
     onSubmit: (values: any) => {
+      setErrorAlert('');
+      setSuccessAlert('');
       passcodeVerify(values);
     },
   })
@@ -98,6 +92,8 @@ const VerifyPasscode = () => {
     if(_.isEmpty(token)){
      return history.push('/login');
     }
+    setErrorAlert('');
+    setSuccessAlert('');
     resendVerifyAccount({purpose:'email_verification', verify_passcode_token: Cookies.get(VERIFY_PASSCODE_PARAM)})
   }
 
@@ -126,7 +122,7 @@ const VerifyPasscode = () => {
                       className="response responseContentDiv"
                       data-testid="response-register-err-div"
                     >
-                      {(result.isError || resultData.isError ) && (
+                      {( !_.isEmpty(ErrorAlert) ) && (
                         <CAlert color="danger" data-testid="register-error-response">
                           {ErrorAlert}
                         </CAlert>
@@ -145,7 +141,7 @@ const VerifyPasscode = () => {
                       )}
 
 
-                      { (resultData.isSuccess || result.isSuccess) &&  (
+                      { ( !_.isEmpty(SuccessAlert) ) &&  (
                         <CAlert color="success" data-testid="register-success-response">
                           {SuccessAlert}
                         </CAlert>
